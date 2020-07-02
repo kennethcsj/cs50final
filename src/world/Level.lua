@@ -66,12 +66,21 @@ function Level:createMaps()
         end
     end
 
-    -- self:generateEntities()
+    self:generateEntities()
 end
 
 function Level:update(dt)
     self.player:update(dt)
-    -- self.entities[1]:processAI({map = self}, dt)
+
+    for k, entity in pairs(self.entities) do
+        entity:processAI({map = self}, dt)
+    end
+
+    for k, entity in pairs(self.entities) do
+        if self.player:collides(entity) then
+            entity.dead = true
+        end
+    end
 
     self:updateCamera()
 end
@@ -87,7 +96,9 @@ function Level:render()
     self.player:render()
 
     for k, entity in pairs(self.entities) do
-        entity:render()
+        if not entity.dead then
+            entity:render()
+        end
     end
     
 end
