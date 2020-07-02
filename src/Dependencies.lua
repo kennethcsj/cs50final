@@ -8,10 +8,28 @@ require 'src/constants'
 require 'src/StateMachine'
 require 'src/Util'
 
+require 'src/entity/entity_defs'
+require 'src/entity/Entity'
+require 'src/entity/Player'
+
 require 'src/states/BaseState'
 require 'src/states/StateStack'
 
+require 'src/states/entity/EntityBaseState'
+require 'src/states/entity/EntityIdleState'
+require 'src/states/entity/EntityWalkState'
+require 'src/states/entity/PlayerIdleState'
+require 'src/states/entity/PlayerWalkState'
+
+require 'src/states/game/FadeInState'
+require 'src/states/game/FadeOutState'
+require 'src/states/game/PlayState'
 require 'src/states/game/StartState'
+
+require 'src/world/Level'
+require 'src/world/tile_ids'
+require 'src/world/Tile'
+require 'src/world/TileMap'
 
 gFonts = {
     ['vsmall'] = love.graphics.newFont('fonts/font.ttf', 4),
