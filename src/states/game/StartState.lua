@@ -18,10 +18,23 @@ function StartState:update(dt)
     if love.keyboard.wasPressed('left') or love.keyboard.wasPressed('right') then
         self.choice = (self.choice == 5) and 8 or 5
     end
+    
     if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
         local character
         character = (self.choice == 5) and 'player-boy' or 'player-girl'
-        gStateStack:push(PlayState({character = character}))
+
+        gStateStack:push(FadeInState({
+            r = 255, g = 255, b = 255
+        }, 1,
+        function()
+            gStateStack:pop()
+            
+            gStateStack:push(PlayState({character = character}))
+            gStateStack:push(FadeOutState({
+                r = 255, g = 255, b = 255
+            }, 1,
+            function() end))
+        end))
     end
 end
 

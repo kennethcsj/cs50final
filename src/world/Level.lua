@@ -27,8 +27,8 @@ function Level:init(def)
 
     self.player = Player {
         animations = ENTITY_DEFS[self.character].animations,
-        mapX = 10,
-        mapY = 10,
+        mapX = 5,
+        mapY = 5,
         width = 16,
         height = 16,
         type = 'player',
