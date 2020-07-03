@@ -13,6 +13,10 @@ function PlayState:init(def)
 end
 
 function PlayState:update(dt)
+    if love.keyboard.wasPressed('m') then
+        gStateStack:push(FieldMenuState(self))
+    end
+
     self.level:update(dt)
 end
 

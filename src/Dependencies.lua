@@ -12,6 +12,12 @@ require 'src/entity/entity_defs'
 require 'src/entity/Entity'
 require 'src/entity/Player'
 
+require 'src/gui/Menu'
+require 'src/gui/Panel'
+require 'src/gui/ProgressBar'
+require 'src/gui/Selection'
+require 'src/gui/Textbox'
+
 require 'src/states/BaseState'
 require 'src/states/StateStack'
 
@@ -23,6 +29,7 @@ require 'src/states/entity/PlayerWalkState'
 
 require 'src/states/game/FadeInState'
 require 'src/states/game/FadeOutState'
+require 'src/states/game/FieldMenuState'
 require 'src/states/game/PlayState'
 require 'src/states/game/StartState'
 
