@@ -17,6 +17,8 @@ function Player:init(def)
             Character(CHARACTER_DEFS['player-girl'], 1)
         }
     }
+    
+    self.items = {}
 end
 
 function Player:restart(def)

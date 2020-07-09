@@ -93,6 +93,7 @@ end
 function Character:increaseStat(stat, increaseAmount)
     if stat == 'hp' then
         self.HP = self.HP + increaseAmount
+        self.currentHP = self.currentHP + increaseAmount
     elseif stat == 'attack' then
         self.attack = self.attack + increaseAmount
     elseif stat == 'defense' then

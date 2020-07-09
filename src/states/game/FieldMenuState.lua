@@ -12,13 +12,13 @@ function FieldMenuState:init(playState)
             {
                 text = 'Party',
                 onSelect = function()
-                    gStateStack:pop()
+                    gStateStack:push(FieldPartyMenuState(self.playState))
                 end
             },
             {
                 text = 'Items',
                 onSelect = function()
-                    gStateStack:pop()
+                    gStateStack:push(FieldItemMenuState(self.playState))
                 end
             },
             {
@@ -35,7 +35,7 @@ function FieldMenuState:init(playState)
 end
 
 function FieldMenuState:update(dt)
-    if love.keyboard.wasPressed('m') then
+    if love.keyboard.wasPressed('m') or love.keyboard.wasPressed('backspace') then
         gStateStack:pop()
     end
 
@@ -43,5 +43,6 @@ function FieldMenuState:update(dt)
 end
 
 function FieldMenuState:render()
+    love.graphics.setFont(gFonts['medium'])
     self.fieldMenu:render()
 end

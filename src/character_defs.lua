@@ -19,6 +19,10 @@ CHARACTER_DEFS = {
                 frames = {29},
                 texture = 'entities'
             },
+            ['idle-down'] = {
+                frames = {5},
+                texture = 'entities'
+            }
         }
     },
     ['player-girl'] = {
@@ -35,6 +39,10 @@ CHARACTER_DEFS = {
             },
             ['idle-right'] = {
                 frames = {32},
+                texture = 'entities'
+            },
+            ['idle-down'] = {
+                frames = {8},
                 texture = 'entities'
             },
         }

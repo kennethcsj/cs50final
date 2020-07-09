@@ -19,6 +19,7 @@ require 'src/gui/Menu'
 require 'src/gui/Panel'
 require 'src/gui/ProgressBar'
 require 'src/gui/Selection'
+require 'src/gui/Selector'
 require 'src/gui/Textbox'
 
 require 'src/states/BaseState'
@@ -39,7 +40,12 @@ require 'src/states/game/BattleMenuState'
 require 'src/states/game/BattleMessageState'
 require 'src/states/game/FadeInState'
 require 'src/states/game/FadeOutState'
+require 'src/states/game/FieldItemMenuState'
+require 'src/states/game/FieldIndividualMenuState'
 require 'src/states/game/FieldMenuState'
+require 'src/states/game/FieldPartyMenuState'
+require 'src/states/game/FieldPartySwitchMenuState'
+require 'src/states/game/FieldUpgradeStatsMenuState'
 require 'src/states/game/PlayState'
 require 'src/states/game/StartState'
 
@@ -62,6 +68,7 @@ gTextures = {
     ['entities'] = love.graphics.newImage('graphics/entities.png'),
     ['tiles'] = love.graphics.newImage('graphics/sheet.png'),
     ['cursor'] = love.graphics.newImage('graphics/cursor.png'),
+    ['food'] = love.graphics.newImage('graphics/food.png')
 }
 
 gFrames = {
