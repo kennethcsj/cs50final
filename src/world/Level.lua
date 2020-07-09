@@ -32,6 +32,7 @@ function Level:init(def)
         width = 16,
         height = 16,
         type = 'player',
+        character = self.character
     }
 
     self.player.stateMachine = StateMachine {
@@ -77,8 +78,24 @@ function Level:update(dt)
     end
 
     for k, entity in pairs(self.entities) do
-        if self.player:collides(entity) then
-            entity.dead = true
+        if self.player:collides(entity) and not self.player.dead and not entity.dead then
+            -- first, push a fade in; when that's done, push a battle state and a fade
+            -- out, which will fall back to the battle state once it pushes itself off
+            gStateStack:push(
+                FadeInState({
+                    r = 255, g = 255, b = 255,
+                }, 1, 
+                function()
+                    gStateStack:push(BattleState(self, self.player, entity))
+                    gStateStack:push(FadeOutState({
+                        r = 255, g = 255, b = 255,
+                    }, 1,
+                
+                    function()
+                        -- nothing to do or push here once the fade out is done
+                    end), self.camX-4, self.camY-4)
+                end, self.camX-4, self.camY-4)
+            )
         end
     end
 
@@ -106,23 +123,30 @@ end
 function Level:generateEntities()
     local type = 'bat'
 
-    table.insert(self.entities, Entity {
-        animations = ENTITY_DEFS[type].animations,
+    local mapPositionX, mapPositionY = {10, 12}, {10, 12}
 
-        -- ensure X and Y are within bounds of the map
-        mapX = 15,
-        mapY = 15,
-        
-        width = 16,
-        height = 16,
-    })
+    for k, value in pairs(mapPositionX) do
+        table.insert(self.entities, Entity {
+            type = type,
+            animations = ENTITY_DEFS[type].animations,
 
-    self.entities[1].stateMachine = StateMachine {
-        ['walk'] = function() return EntityWalkState(self.entities[1], self) end,
-        ['idle'] = function() return EntityIdleState(self.entities[1]) end
-    }
+            -- ensure X and Y are within bounds of the map
+            mapX = mapPositionX[k],
+            mapY = mapPositionY[k],
+            
+            width = 16,
+            height = 16,
+        })
+    end
 
-    self.entities[1]:changeState('walk')
+    for k, entity in pairs(self.entities) do
+        entity.stateMachine = StateMachine {
+            ['walk'] = function() return EntityWalkState(entity, self) end,
+            ['idle'] = function() return EntityIdleState(entity) end
+        }
+
+        entity:changeState('walk')
+    end
 end
 
 function Level:updateCamera()

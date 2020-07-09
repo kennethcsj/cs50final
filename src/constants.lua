@@ -5,3 +5,6 @@ WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
 TILE_SIZE = 16
+
+-- available stats points gained from each level up
+LEVEL_UP_STATS_UPGRADE = 5
