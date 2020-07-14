@@ -62,6 +62,8 @@ function FieldItemMenuState:render()
     end
 
     for k, item in pairs(self.items) do
+        item.isSelected = (k == self.select.currentSelection) and true or false
+        
         if k >= self.displayFirstItem and k <= self.displayLastItem then
             item.x = self.x + VIRTUAL_WIDTH / 4 - 8
             item.y = self.y + (k - self.displayFirstItem) * VIRTUAL_HEIGHT / 8 + VIRTUAL_HEIGHT / 16 - 8

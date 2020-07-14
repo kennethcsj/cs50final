@@ -9,7 +9,17 @@
 PlayState = Class{__includes = BaseState}
 
 function PlayState:init(def)
-    self.level = Level(def)
+    self.player = Player {
+        animations = ENTITY_DEFS[def.character].animations,
+        mapX = 5,
+        mapY = 5,
+        width = 16,
+        height = 16,
+        type = 'player',
+        character = def.character
+    }
+
+    self.level = Level(def, self.player)
 end
 
 function PlayState:update(dt)

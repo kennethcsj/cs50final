@@ -8,14 +8,12 @@
 
 Level = Class{}
 
-function Level:init(def)
+function Level:init(def, player)
     self.camX = 0
     self.camY = 0
 
     self.tileWidth = 30
     self.tileHeight = 30
-
-    self.character = def.character
 
     self.baseLayer = TileMap(self.tileWidth, self.tileHeight)
     self.grassLayer = TileMap(self.tileWidth, self.tileHeight)
@@ -25,15 +23,7 @@ function Level:init(def)
 
     self:createMaps()
 
-    self.player = Player {
-        animations = ENTITY_DEFS[self.character].animations,
-        mapX = 5,
-        mapY = 5,
-        width = 16,
-        height = 16,
-        type = 'player',
-        character = self.character
-    }
+    self.player = player
 
     self.player.stateMachine = StateMachine {
         ['walk'] = function() return PlayerWalkState(self.player, self) end,

@@ -13,6 +13,7 @@ function Item:init(def)
     self.count = 1
 
     self.isUsed = false
+    self.isSelected = false
 end
 
 function Item:use(char)
@@ -22,7 +23,13 @@ function Item:use(char)
 end
 
 function Item:render()
+    love.graphics.setColor(255, 255, 255, 255)
     love.graphics.draw(gTextures[self.texture], self.x, self.y)
     love.graphics.setFont(gFonts['medium'])
+    if self.isSelected then
+        love.graphics.setColor(255, 255, 255, 255)
+    else
+        love.graphics.setColor(0, 0, 0, 255)
+    end
     love.graphics.print(' x ' .. self.count, self.x + 32, self.y)
 end

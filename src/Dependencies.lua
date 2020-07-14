@@ -38,6 +38,8 @@ require 'src/states/entity/PlayerWalkState'
 require 'src/states/game/BattleState'
 require 'src/states/game/BattleAttackState'
 require 'src/states/game/BattleEnemySelectState'
+require 'src/states/game/BattleItemState'
+require 'src/states/game/BattleItemSelectState'
 require 'src/states/game/BattleMenuState'
 require 'src/states/game/BattleMessageState'
 require 'src/states/game/FadeInState'
@@ -58,6 +60,8 @@ require 'src/world/Level'
 require 'src/world/tile_ids'
 require 'src/world/Tile'
 require 'src/world/TileMap'
+
+require 'src/world/maps/MapOne'
 
 gFonts = {
     ['vsmall'] = love.graphics.newFont('fonts/font.ttf', 4),

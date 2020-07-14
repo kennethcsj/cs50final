@@ -54,6 +54,8 @@ function BattleEnemySelectState:update(dt)
             gStateStack:pop()
             gStateStack:push(BattleAttackState(self.battleState))
         end
+    elseif love.keyboard.wasPressed('backspace') then
+        gStateStack:pop()
     end
 end
 
