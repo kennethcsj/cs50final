@@ -8,16 +8,19 @@
 
 Textbox = Class{}
 
-function Textbox:init(x, y, width, height, text, font)
+function Textbox:init(x, y, width, height, text, font, alignment, input)
     self.panel = Panel(x, y, width, height)
     self.x = x
     self.y = y
     self.width = width
     self.height = height
+    self.input = input or true
 
     self.text = text
     self.font = font or gFonts['small']
     _, self.textChunks = self.font:getWrap(self.text, self.width - 12)
+
+    self.alignment = alignment or 'left'
 
     self.chunkCounter = 1
     self.endOfText = false
@@ -58,8 +61,10 @@ function Textbox:next()
 end
 
 function Textbox:update(dt)
-    if love.keyboard.wasPressed('space') or love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
-        self:next()
+    if self.input then
+        if love.keyboard.wasPressed('space') or love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+            self:next()
+        end
     end
 end
 
@@ -72,6 +77,6 @@ function Textbox:render()
     
     love.graphics.setFont(self.font)
     for i = 1, #self.displayingChunks do
-        love.graphics.print(self.displayingChunks[i], self.x + 3, self.y + 3 + (i - 1) * 16)
+        love.graphics.printf(self.displayingChunks[i], self.x + 3, self.y + 4 + (i - 1) * 16, VIRTUAL_WIDTH / 2, self.alignment)
     end
 end

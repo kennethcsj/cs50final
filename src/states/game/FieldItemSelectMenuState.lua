@@ -1,11 +1,12 @@
-FieldPartySwitchMenuState = Class{__includes = BaseState}
+FieldItemSelectMenuState = Class{__includes = BaseState}
 
-function FieldPartySwitchMenuState:init(playState, charPosition)
+function FieldItemSelectMenuState:init(playState, itemPosition)
     self.playState = playState
 
-    self.charPosition = charPosition
+    self.itemPosition = itemPosition
 
     self.party = self.playState.level.player.party.party
+    self.items = self.playState.level.player.items
 
     self.select = Selector{
         items = self.party
@@ -25,29 +26,40 @@ function FieldPartySwitchMenuState:init(playState, charPosition)
     end
 end
 
-function FieldPartySwitchMenuState:update(dt)
+function FieldItemSelectMenuState:update(dt)
     if love.keyboard.wasPressed('backspace') then
         gStateStack:pop()
     elseif love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
-        local tempChar = self.party[self.select.currentSelection]
-        self.party[self.select.currentSelection] = self.party[self.charPosition]
-        self.party[self.charPosition] = tempChar
-        gStateStack:pop()
+        -- Use Item
+        self.items[self.itemPosition]:use(self.party[self.select.currentSelection])
 
-        -- pop away field individual stats state
-        gStateStack:pop()
+        local name = self.items[self.itemPosition].name
+        if self.items[self.itemPosition].count > 1 then
+            self.items[self.itemPosition].count = self.items[self.itemPosition].count - 1
+        else
+            table.remove(self.items, self.itemPosition)
+        end
+
+        local text = tostring(name) .. ' used on ' .. tostring(self.party[self.select.currentSelection].name) .. '!'
+        gStateStack:push(MessageConfirmState(nil, self.playState.level.camX, self.playState.level.camY, 'center', function()
+            gStateStack:pop()
+
+            gStateStack:push(MessagePopUpState(text, self.playState.level.camX, self.playState.level.camY, 'center', function()
+                gStateStack:pop() 
+            end))
+        end))
     end
 
     self.select:update(dt)
 end
 
-function FieldPartySwitchMenuState:render()
+function FieldItemSelectMenuState:render()
     love.graphics.setFont(gFonts['small'])
     
     self.topPanel:render()
 
     love.graphics.setColor(0, 0, 0, 255)
-    love.graphics.print('Switch '.. tostring(self.party[self.charPosition].name) .. ' Position with??   ' .. self.party[self.select.currentSelection].name, self.x + 16, self.y - 16)
+    love.graphics.print('Choose character to use item on..  ' .. self.party[self.select.currentSelection].name, self.x + 16, self.y - 16)
     
     for k, panel in pairs(self.panels) do
         if k == self.select.currentSelection then

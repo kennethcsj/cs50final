@@ -3,6 +3,7 @@ FieldUpgradeStatsMenuState = Class{__includes = BaseState}
 function FieldUpgradeStatsMenuState:init(playState, char)
     self.playState = playState
     self.char = char
+    self.originalLvlPts = self.char.levelUpPoints
 
     -- how much to add 
     self.addHP = 0
@@ -29,11 +30,23 @@ end
 function FieldUpgradeStatsMenuState:update(dt)
     if love.keyboard.wasPressed('backspace') then
         gStateStack:pop()
-    elseif love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then       
+    elseif (self.originalLvlPts > 0) and (love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return')) then
+        gStateStack:push(MessageConfirmState(nil, self.playState.level.camX, self.playState.level.camY, 'center', function()
+            gStateStack:pop()
+ 
+            local text = 'Increased ' .. tostring(self.char.name) .. "'s stats" 
+            gStateStack:push(MessagePopUpState(text, self.playState.level.camX, self.playState.level.camY, 'center', function()
+                gStateStack:pop()
+            end))
+        end))   
+        
         for k, stat in pairs(self.stats) do
             self.char:increaseStat(stat, self.items[k])
             self.items[k] = 0
         end
+
+        -- reset the number of Level Up Points
+        self.originalLvlPts = self.char.levelUpPoints
     elseif love.keyboard.wasPressed('left') then
         if not (self.items[self.select.currentSelection] == 0) then
             self.items[self.select.currentSelection] = self.items[self.select.currentSelection] - 1
