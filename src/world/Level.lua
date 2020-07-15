@@ -29,6 +29,7 @@ function Level:init(def, player)
         ['walk'] = function() return PlayerWalkState(self.player, self) end,
         ['idle'] = function() return PlayerIdleState(self.player) end
     }
+
     self.player.stateMachine:change('idle')
 end
 
@@ -39,7 +40,7 @@ function Level:createMaps()
         table.insert(self.baseLayer.tiles, {})
 
         for x = 1, self.tileWidth do
-            local id = TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]
+            local id = TILE_IDS['sand'][math.random(#TILE_IDS['sand'])]
 
             table.insert(self.baseLayer.tiles[y], Tile(x, y, id))
         end

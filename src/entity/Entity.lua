@@ -50,6 +50,13 @@ function Entity:createAnimations(animations)
     return animationsReturned
 end
 
+function Entity:updateCoordinates()
+    self.x = (self.mapX - 1) * TILE_SIZE
+
+    -- halfway raised on the tile just to simulate height/perspective
+    self.y = (self.mapY - 1) * TILE_SIZE - self.height / 2
+end
+
 --[[
     Called when we interact with this entity, as by pressing enter.
 ]]

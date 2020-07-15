@@ -62,6 +62,7 @@ require 'src/world/Tile'
 require 'src/world/TileMap'
 
 require 'src/world/maps/MapOne'
+require 'src/world/maps/map_defs'
 
 gFonts = {
     ['vsmall'] = love.graphics.newFont('fonts/font.ttf', 4),

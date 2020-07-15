@@ -19,7 +19,7 @@ function PlayState:init(def)
         character = def.character
     }
 
-    self.level = Level(def, self.player)
+    self.level = MapOne(def, self.player)
 end
 
 function PlayState:update(dt)

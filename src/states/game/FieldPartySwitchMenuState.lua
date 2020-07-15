@@ -32,6 +32,11 @@ function FieldPartySwitchMenuState:update(dt)
         local tempChar = self.party[self.select.currentSelection]
         self.party[self.select.currentSelection] = self.party[self.charPosition]
         self.party[self.charPosition] = tempChar
+
+        self.playState.level.player.animations = self.playState.level.player:createAnimations(ENTITY_DEFS[self.party[1].id].animations)
+        
+        self.playState.level.player.character = self.party[1].id
+
         gStateStack:pop()
 
         -- pop away field individual stats state

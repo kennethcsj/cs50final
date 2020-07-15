@@ -11,10 +11,12 @@ Player = Class{__includes = Entity}
 function Player:init(def)
     Entity.init(self, def)
 
+    local other = (def.character == 'player-boy') and 'player-girl' or 'player-boy'
+
     self.party = Party {
         party = {
             Character(CHARACTER_DEFS[def.character], 1),
-            Character(CHARACTER_DEFS['player-girl'], 1)
+            Character(CHARACTER_DEFS[other], 1)
         }
     }
     

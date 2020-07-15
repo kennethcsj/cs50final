@@ -8,10 +8,17 @@
 
 TileMap = Class{}
 
-function TileMap:init(width, height)
+function TileMap:init(width, height, startX, startY, endX, endY, id)
     self.tiles = {}
+
     self.width = width
     self.height = height
+
+    self.startX = startX
+    self.startY = startY
+    self.endX = endX
+    self.endY = endY
+    self.id = id
 end
 
 function TileMap:render()

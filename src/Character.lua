@@ -3,6 +3,7 @@ Character = Class{}
 function Character:init(def, level)
     self.name = def.name
     self.type = def.type
+    self.id = def.id
 
     self.animations = self:createAnimations(def.animations)
 
