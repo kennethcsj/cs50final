@@ -70,5 +70,26 @@ ENEMY_DEFS = {
                 interval = 0.2
             },
         }
-    }
+    },
+    ['boss'] = {
+        name = 'Bat Boss',
+        type = 'boss',
+        baseHP = 20,
+        baseAttack = 10,
+        baseDefense = 10,
+        baseSpeed = 10,
+        expPerLvl = 10,
+        animations = {
+            ['idle-left'] = {
+                frames = {7, 8, 9},
+                interval = 0.3,
+                texture = 'boss'
+            },
+            ['idle-right'] = {
+                frames = {13, 14, 15},
+                interval = 0.3,
+                texture = 'boss'
+            },
+        }
+    },
 }

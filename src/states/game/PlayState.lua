@@ -11,15 +11,16 @@ PlayState = Class{__includes = BaseState}
 function PlayState:init(def)
     self.player = Player {
         animations = ENTITY_DEFS[def.character].animations,
-        mapX = 5,
-        mapY = 5,
+        mapX = 15,
+        mapY = 13,
         width = 16,
         height = 16,
         type = 'player',
         character = def.character
     }
+    self.restart = true
 
-    self.level = MapOne(def, self.player)
+    self.level = MapHome(self, self.player)
 end
 
 function PlayState:update(dt)

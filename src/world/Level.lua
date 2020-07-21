@@ -8,7 +8,7 @@
 
 Level = Class{}
 
-function Level:init(def, player)
+function Level:init(playState, player)
     self.camX = 0
     self.camY = 0
 
@@ -24,13 +24,13 @@ function Level:init(def, player)
     self:createMaps()
 
     self.player = player
+    self.playState = playState
 
-    self.player.stateMachine = StateMachine {
-        ['walk'] = function() return PlayerWalkState(self.player, self) end,
-        ['idle'] = function() return PlayerIdleState(self.player) end
-    }
+    self.player.mapX = 1
+    self.player.mapY = 18
+    self.player:updateCoordinates()
 
-    self.player.stateMachine:change('idle')
+    self:updateCamera()
 end
 
 function Level:createMaps()
@@ -40,7 +40,7 @@ function Level:createMaps()
         table.insert(self.baseLayer.tiles, {})
 
         for x = 1, self.tileWidth do
-            local id = TILE_IDS['sand'][math.random(#TILE_IDS['sand'])]
+            local id = TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]
 
             table.insert(self.baseLayer.tiles[y], Tile(x, y, id))
         end

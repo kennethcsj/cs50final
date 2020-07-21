@@ -24,6 +24,10 @@ function BattleState:init(playState, player, enemy)
     }
 
     local numEnemies = math.random(3)
+    if (self.enemy.type == 'boss') then
+        numEnemies = 1
+    end
+
     for x = 1, numEnemies do
         table.insert(self.enemyParty.party.party, Character(ENEMY_DEFS[self.enemy.type], 1))
     end

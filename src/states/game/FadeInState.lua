@@ -28,7 +28,7 @@ end
 
 function FadeInState:render()
     love.graphics.setColor(self.r, self.g, self.b, self.opacity)
-    love.graphics.rectangle('fill', self.x, self.y, VIRTUAL_WIDTH * 2, VIRTUAL_HEIGHT * 2)
+    love.graphics.rectangle('fill', self.x, self.y, VIRTUAL_WIDTH * 5, VIRTUAL_HEIGHT * 5)
 
     love.graphics.setColor(255, 255, 255, 255)
 end

@@ -45,10 +45,39 @@ function EntityWalkState:attemptMove()
         return
     end
 
+    if not self.level.walkableTiles[toY][toX] then
+        self.entity:changeState('idle')
+        self.entity:changeAnimation('idle-' .. tostring(self.entity.direction))
+        return
+    end
+
+    -- return on collide with object
+    if (self.entity.type == 'player') then
+        for k, object in pairs(self.level.objects) do
+            if (toX == object.collideX) and (toY == object.collideY) then
+                if object.solid then
+                    object:onCollide()
+
+                    self.entity:changeState('idle')
+                    self.entity:changeAnimation('idle-' .. tostring(self.entity.direction))
+                    return
+                elseif object.consumable then
+                    object:onConsume()
+                elseif object.activation then
+                    object:onActivate()
+
+                    self.entity:changeState('idle')
+                    self.entity:changeAnimation('idle-' .. tostring(self.entity.direction))
+                    return 
+                end
+            end
+        end
+    end
+
     self.entity.mapY = toY
     self.entity.mapX = toX
 
-    Timer.tween(0.5, {
+    Timer.tween(0.2, {
         [self.entity] = {x = (toX - 1) * TILE_SIZE, y = (toY - 1) * TILE_SIZE - self.entity.height / 2}
     }):finish(function()
         if (self.entity.type == 'player') then

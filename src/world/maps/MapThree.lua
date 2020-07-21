@@ -1,6 +1,6 @@
-MapOne = Class{}
+MapThree = Class{}
 
-function MapOne:init(playState, player)
+function MapThree:init(playState, player)
     self.camX = 0
     self.camY = 0
 
@@ -25,24 +25,25 @@ function MapOne:init(playState, player)
     }
 
     self.player.stateMachine:change('idle')
-
+    
     if self.player.direction == 'up' then
         self.player.mapY = self.tileHeight
     elseif self.player.direction == 'left' then
         self.player.mapX = self.tileWidth
-        self.player.mapY = 18
+        self.player.mapY = 14
     elseif self.player.direction == 'right' then
         self.player.mapX = 1
-        self.player.mapY = 18
+        self.player.mapY = 24
     else
         self.player.mapY = 1
     end
+
     self.player:updateCoordinates()
 
     self:updateCamera()
 end
 
-function MapOne:render()
+function MapThree:render()
     -- translate the entire view of the scene to emulate a camera
     love.graphics.translate(-math.floor(self.camX), -math.floor(self.camY))
 
@@ -69,7 +70,7 @@ function MapOne:render()
     self.player:render()
 end
 
-function MapOne:createMap()
+function MapThree:createMap()
     for y = 1, self.tileHeight do
         table.insert(self.walkableTiles, {})
 
@@ -103,7 +104,7 @@ function MapOne:createMap()
     end
 end
 
-function MapOne:update(dt)
+function MapThree:update(dt)
     self.player:update(dt)
 
     for k, entity in pairs(self.entities) do
@@ -116,18 +117,7 @@ function MapOne:update(dt)
             r = 0, g = 0, b = 0
         }, 1,
         function()            
-            self.playState.level = MapThree(self.playState, self.player)
-            gStateStack:push(FadeOutState({
-                r = 0, g = 0, b = 0
-            }, 1,
-            function() end))
-        end))
-    elseif love.keyboard.isDown('up') and (self.player.mapY == 1) then
-        gStateStack:push(FadeInState({
-            r = 0, g = 0, b = 0
-        }, 1,
-        function()            
-            self.playState.level = MapTwo(self.playState, self.player)
+            self.playState.level = MapFour(self.playState, self.player)
             gStateStack:push(FadeOutState({
                 r = 0, g = 0, b = 0
             }, 1,
@@ -138,7 +128,7 @@ function MapOne:update(dt)
             r = 0, g = 0, b = 0
         }, 1,
         function()            
-            self.playState.level = MapHome(self.playState, self.player)
+            self.playState.level = MapOne(self.playState, self.player)
             gStateStack:push(FadeOutState({
                 r = 0, g = 0, b = 0
             }, 1,
@@ -149,7 +139,7 @@ function MapOne:update(dt)
     self:updateCamera()
 end
 
-function MapOne:generateEntities()
+function MapThree:generateEntities()
     local type = 'bat'
 
     local mapPositionX, mapPositionY = {19, 10, 25}, {15, 18, 17}
@@ -178,7 +168,7 @@ function MapOne:generateEntities()
     end
 end
 
-function MapOne:updateCamera()
+function MapThree:updateCamera()
     -- clamp movement of the camera's X between 0 and the map bounds - virtual width,
     -- setting it half the screen to the left of the player so they are in the center
     self.camX = math.max(0,
@@ -190,9 +180,18 @@ function MapOne:updateCamera()
         self.player.y - (VIRTUAL_HEIGHT / 2 - 8)))
 end
 
-function MapOne:initMap()
+function MapThree:initMap()
     table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, self.tileWidth, self.tileHeight, TILE_IDS['sand'][math.random(#TILE_IDS['sand'])]))
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, 15, 15, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 20, 1, 30, 15, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 20, self.tileWidth, self.tileHeight, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, 5, 20, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 27, self.tileWidth, self.tileHeight, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
+
+    local y = 20
+    for x = 6, 25 do
+        table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, x, 1, x, y, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
+        table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, x, y + 7, x, self.tileWidth, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
+        y = y - 0.5
+    end
+
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 26, 1, self.tileWidth, y, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 26, y + 7, self.tileWidth, self.tileHeight, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
 end

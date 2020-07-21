@@ -22,3 +22,7 @@ TILE_IDS = {
     ['horizontal-wooden-gate-right'] = 65,
     ['vertical-wooden-gate-middle'] = 81,
 }
+
+WALKABLE_TILE_IDS = {
+    45, 62, 101
+}

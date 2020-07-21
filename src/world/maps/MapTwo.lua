@@ -1,6 +1,6 @@
-MapOne = Class{}
+MapTwo = Class{}
 
-function MapOne:init(playState, player)
+function MapTwo:init(playState, player)
     self.camX = 0
     self.camY = 0
 
@@ -8,11 +8,16 @@ function MapOne:init(playState, player)
     self.tileHeight = 30
 
     self.layers = {}
+
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, self.tileWidth, self.tileHeight, TILE_IDS['sand'][math.random(#TILE_IDS['sand'])]))
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, self.tileWidth, 10, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 20, 1, self.tileWidth, self.tileHeight, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, 15, self.tileHeight, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
+
     self.entities = {}
     self.objects = {}
     self.walkableTiles = {}
 
-    self:initMap()
     self:createMap()
     self:generateEntities()
 
@@ -30,19 +35,18 @@ function MapOne:init(playState, player)
         self.player.mapY = self.tileHeight
     elseif self.player.direction == 'left' then
         self.player.mapX = self.tileWidth
-        self.player.mapY = 18
     elseif self.player.direction == 'right' then
         self.player.mapX = 1
-        self.player.mapY = 18
     else
         self.player.mapY = 1
     end
+
     self.player:updateCoordinates()
 
     self:updateCamera()
 end
 
-function MapOne:render()
+function MapTwo:render()
     -- translate the entire view of the scene to emulate a camera
     love.graphics.translate(-math.floor(self.camX), -math.floor(self.camY))
 
@@ -69,7 +73,7 @@ function MapOne:render()
     self.player:render()
 end
 
-function MapOne:createMap()
+function MapTwo:createMap()
     for y = 1, self.tileHeight do
         table.insert(self.walkableTiles, {})
 
@@ -103,7 +107,7 @@ function MapOne:createMap()
     end
 end
 
-function MapOne:update(dt)
+function MapTwo:update(dt)
     self.player:update(dt)
 
     for k, entity in pairs(self.entities) do
@@ -111,34 +115,12 @@ function MapOne:update(dt)
         entity:update(dt)
     end
 
-    if love.keyboard.isDown('right') and (self.player.mapX == self.tileWidth) then
+    if love.keyboard.isDown('down') and (self.player.mapY == self.tileHeight) then
         gStateStack:push(FadeInState({
             r = 0, g = 0, b = 0
         }, 1,
         function()            
-            self.playState.level = MapThree(self.playState, self.player)
-            gStateStack:push(FadeOutState({
-                r = 0, g = 0, b = 0
-            }, 1,
-            function() end))
-        end))
-    elseif love.keyboard.isDown('up') and (self.player.mapY == 1) then
-        gStateStack:push(FadeInState({
-            r = 0, g = 0, b = 0
-        }, 1,
-        function()            
-            self.playState.level = MapTwo(self.playState, self.player)
-            gStateStack:push(FadeOutState({
-                r = 0, g = 0, b = 0
-            }, 1,
-            function() end))
-        end))
-    elseif love.keyboard.isDown('left') and (self.player.mapX == 1) then
-        gStateStack:push(FadeInState({
-            r = 0, g = 0, b = 0
-        }, 1,
-        function()            
-            self.playState.level = MapHome(self.playState, self.player)
+            self.playState.level = MapOne(self.playState, self.player)
             gStateStack:push(FadeOutState({
                 r = 0, g = 0, b = 0
             }, 1,
@@ -149,7 +131,7 @@ function MapOne:update(dt)
     self:updateCamera()
 end
 
-function MapOne:generateEntities()
+function MapTwo:generateEntities()
     local type = 'bat'
 
     local mapPositionX, mapPositionY = {19, 10, 25}, {15, 18, 17}
@@ -178,7 +160,7 @@ function MapOne:generateEntities()
     end
 end
 
-function MapOne:updateCamera()
+function MapTwo:updateCamera()
     -- clamp movement of the camera's X between 0 and the map bounds - virtual width,
     -- setting it half the screen to the left of the player so they are in the center
     self.camX = math.max(0,
@@ -188,11 +170,4 @@ function MapOne:updateCamera()
     self.camY = math.max(0,
         math.min(TILE_SIZE * self.tileHeight - VIRTUAL_HEIGHT,
         self.player.y - (VIRTUAL_HEIGHT / 2 - 8)))
-end
-
-function MapOne:initMap()
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, self.tileWidth, self.tileHeight, TILE_IDS['sand'][math.random(#TILE_IDS['sand'])]))
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, 15, 15, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 20, 1, 30, 15, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 20, self.tileWidth, self.tileHeight, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
 end

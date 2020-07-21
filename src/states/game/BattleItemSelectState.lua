@@ -18,6 +18,14 @@ function BattleItemSelectState:init(battleState, itemNum)
 end
 
 function BattleItemSelectState:update(dt)
+    for k, char in pairs(self.party) do
+        char:update(dt)
+    end
+
+    for k, char in pairs(self.battleState.enemyParty.party.party) do
+        char:update(dt)
+    end
+
     if love.keyboard.wasPressed('up') then
         if self.currentSelection == 1 then
             self.currentSelection = #self.alive

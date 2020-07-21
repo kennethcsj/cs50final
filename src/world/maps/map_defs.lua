@@ -1,4 +1,19 @@
 MAP_DEFS = {
+    ['portal'] = {
+        solid = false,
+        consumable = false,
+        activation = true,
+        texture = 'portals',
+        width = 48,
+        height = 48,
+        animations = {
+            ['default'] = {
+                frames = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13},
+                interval = 0.15,
+                texture = 'portals',
+            }
+        }
+    },
     ['metal-gate-hor-mid'] = {
         isSolid = true,
         isConsumable = false,

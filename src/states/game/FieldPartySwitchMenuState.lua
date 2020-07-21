@@ -34,7 +34,6 @@ function FieldPartySwitchMenuState:update(dt)
         self.party[self.charPosition] = tempChar
 
         self.playState.level.player.animations = self.playState.level.player:createAnimations(ENTITY_DEFS[self.party[1].id].animations)
-        
         self.playState.level.player.character = self.party[1].id
 
         gStateStack:pop()

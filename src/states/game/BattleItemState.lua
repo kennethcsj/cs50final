@@ -36,6 +36,14 @@ function BattleItemState:update(dt)
         self.displayLastItem = self.displayLastItem - (self.displayFirstItem - self.select.currentSelection)
         self.displayFirstItem = self.select.currentSelection
     end
+
+    for k, char in pairs(self.player.party.party) do
+        char:update(dt)
+    end
+
+    for k, char in pairs(self.battleState.enemyParty.party.party) do
+        char:update(dt)
+    end
 end
 
 function BattleItemState:render()

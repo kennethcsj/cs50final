@@ -19,6 +19,14 @@ function BattleEnemySelectState:init(battleState, attackerNum)
 end
 
 function BattleEnemySelectState:update(dt)
+    for k, char in pairs(self.battleState.player.party.party) do
+        char:update(dt)
+    end
+
+    for k, char in pairs(self.party) do
+        char:update(dt)
+    end
+
     if love.keyboard.wasPressed('up') then
         if self.currentSelection == 1 then
             self.currentSelection = #self.alive

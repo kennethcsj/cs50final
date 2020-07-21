@@ -16,6 +16,7 @@ require 'src/Util'
 require 'src/entity/entity_defs'
 require 'src/entity/Entity'
 require 'src/entity/Player'
+require 'src/entity/Object'
 
 require 'src/gui/Menu'
 require 'src/gui/Panel'
@@ -61,7 +62,11 @@ require 'src/world/tile_ids'
 require 'src/world/Tile'
 require 'src/world/TileMap'
 
+require 'src/world/maps/MapHome'
 require 'src/world/maps/MapOne'
+require 'src/world/maps/MapTwo'
+require 'src/world/maps/MapThree'
+require 'src/world/maps/MapFour'
 require 'src/world/maps/map_defs'
 
 gFonts = {
@@ -78,11 +83,15 @@ gTextures = {
     ['entities'] = love.graphics.newImage('graphics/entities.png'),
     ['tiles'] = love.graphics.newImage('graphics/sheet.png'),
     ['cursor'] = love.graphics.newImage('graphics/cursor.png'),
-    ['food'] = love.graphics.newImage('graphics/food.png')
+    ['food'] = love.graphics.newImage('graphics/food.png'),
+    ['portals'] = love.graphics.newImage('graphics/portal.png'),
+    ['boss'] = love.graphics.newImage('graphics/boss.png')
 }
 
 gFrames = {
     ['arrows'] = GenerateQuads(gTextures['arrows'], 16, 16),
     ['entities'] = GenerateQuads(gTextures['entities'], 16, 16),
     ['tiles'] = GenerateQuads(gTextures['tiles'], 16, 16),
+    ['portals'] = GenerateQuads(gTextures['portals'], 48, 48),
+    ['boss'] = GenerateQuads(gTextures['boss'], 48, 48)
 }
