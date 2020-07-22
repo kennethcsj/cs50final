@@ -178,7 +178,7 @@ function MapOne:generateEntities()
     local mapPositionX, mapPositionY = {19, 10, 25}, {15, 18, 17}
 
     for k, value in pairs(mapPositionX) do
-        table.insert(self.entities, Entity {
+        table.insert(self.entities, Enemy {
             type = type,
             animations = ENTITY_DEFS[type].animations,
 

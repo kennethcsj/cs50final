@@ -41,7 +41,7 @@ function BattleMenuState:update(dt)
         char:update(dt)
     end
 
-    for k, char in pairs(self.battleState.enemyParty.party.party) do
+    for k, char in pairs(self.battleState.enemyParty) do
         char:update(dt)
     end
 end

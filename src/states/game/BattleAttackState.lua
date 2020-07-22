@@ -4,7 +4,7 @@ function BattleAttackState:init(battleState)
     self.battleState = battleState
 
     self.playerParty = self.battleState.player.party.party
-    self.enemyParty = self.battleState.enemyParty.party.party
+    self.enemyParty = self.battleState.enemyParty
 
     self.total = #self.playerParty + #self.enemyParty
 

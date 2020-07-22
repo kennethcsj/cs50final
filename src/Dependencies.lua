@@ -16,6 +16,7 @@ require 'src/Util'
 require 'src/entity/entity_defs'
 require 'src/entity/Entity'
 require 'src/entity/Player'
+require 'src/entity/Enemy'
 require 'src/entity/Object'
 
 require 'src/gui/Menu'
@@ -27,8 +28,6 @@ require 'src/gui/Textbox'
 
 require 'src/states/BaseState'
 require 'src/states/StateStack'
-
-require 'src/battle/Enemy'
 
 require 'src/states/entity/EntityBaseState'
 require 'src/states/entity/EntityIdleState'

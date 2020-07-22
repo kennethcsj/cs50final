@@ -18,11 +18,7 @@ function BattleState:init(playState, player, enemy, enemyLvl)
 
     self.bottomPanel = Panel(self.playState.camX, self.playState.camY + VIRTUAL_HEIGHT - 64, VIRTUAL_WIDTH, 64)
 
-    self.enemyParty = Enemy {
-        party = Party {
-            party = {}
-        }
-    }
+    self.enemyParty = self.enemy.party.party
 
     local numEnemies = math.random(3)
     if (self.enemy.type == 'boss') then
@@ -30,7 +26,7 @@ function BattleState:init(playState, player, enemy, enemyLvl)
     end
 
     for x = 1, numEnemies do
-        table.insert(self.enemyParty.party.party, Character(ENEMY_DEFS[self.enemy.type], enemyLvl))
+        table.insert(self.enemyParty, Character(ENEMY_DEFS[self.enemy.type], enemyLvl))
     end
     
     for k, char in pairs(self.player.party.party) do
@@ -71,15 +67,15 @@ function BattleState:init(playState, player, enemy, enemyLvl)
         }
     end
 
-    for k, char in pairs(self.enemyParty.party.party) do
-        local x, y = math.floor(self.playState.camX + VIRTUAL_WIDTH - 96), math.floor(self.playState.camY + 96 - (24 * (#self.enemyParty.party.party - k)))
+    for k, char in pairs(self.enemyParty) do
+        local x, y = math.floor(self.playState.camX + VIRTUAL_WIDTH - 96), math.floor(self.playState.camY + 96 - (24 * (#self.enemyParty- k)))
         
         char.currentScreenX = x
         char.currentScreenY = y
         
         char.healthBar = ProgressBar {
             x = self.playState.camX + VIRTUAL_WIDTH - 104,
-            y = self.playState.camY + 88 - (24 * (#self.enemyParty.party.party - k)),
+            y = self.playState.camY + 88 - (24 * (#self.enemyParty - k)),
             width = 48,
             height = 3,
             color = {r = 189, g = 32, b = 32},
@@ -92,7 +88,7 @@ function BattleState:init(playState, player, enemy, enemyLvl)
         char:changeAnimation('idle-right')
     end
 
-    for k, char in pairs(self.enemyParty.party.party) do
+    for k, char in pairs(self.enemyParty) do
         char:changeAnimation('idle-left')
     end
 
@@ -124,7 +120,7 @@ function BattleState:update(dt)
             char:update(dt)
         end
     
-        for k, char in pairs(self.enemyParty.party.party) do
+        for k, char in pairs(self.enemyParty) do
             char:update(dt)
         end
     end
@@ -139,7 +135,7 @@ function BattleState:render()
         char.healthBar:render()
     end
 
-    for k, char in pairs(self.enemyParty.party.party) do
+    for k, char in pairs(self.enemyParty) do
         char:render()
         char.healthBar:render()
     end

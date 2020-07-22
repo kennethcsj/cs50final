@@ -5,7 +5,7 @@ function BattleEnemySelectState:init(battleState, attackerNum)
     self.attackerNum = attackerNum
 
     self.enemyParty = self.battleState.enemyParty
-    self.party = self.enemyParty.party.party
+    self.party = self.enemyParty
 
     self.alive = {}
 

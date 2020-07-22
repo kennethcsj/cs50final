@@ -175,7 +175,7 @@ function MapFour:update(dt)
 end
 
 function MapFour:generateEntities()
-    table.insert(self.entities, Entity {
+    table.insert(self.entities, Enemy {
         type = 'boss',
         animations = ENTITY_DEFS['boss'].animations,
 
