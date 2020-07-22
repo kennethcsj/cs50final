@@ -54,7 +54,7 @@ end
 function MapHome:update(dt)
     if self.playState.firstEnter then
         gStateStack:push(DialogueState("Welcome Chosen One! Press 'M' to open Menu. " ..
-            "'Backspace' to return. 'Enter' to select/next. 'Esc' to exit game. Fight On!", self.camX, self.camY, 'left', function()       
+            "'Backspace' to return. 'Enter' to select/next. 'Esc' to exit game. 'H' to open Help dialouge. Fight On!", self.camX, self.camY, 'left', function()       
                 self.playState.firstEnter = false
             end
         ))
@@ -162,17 +162,16 @@ function MapHome:generateObjects()
             end
 
             gStateStack:pop()
-            self.playState.restart = true
-
             gStateStack:push(FadeInState({
                 r = 0, g = 0, b = 0
             }, 1,
-            function()            
-                self.playState.level = MapHome(self.playState, self.player)
+            function()
                 gStateStack:push(FadeOutState({
                     r = 0, g = 0, b = 0
                 }, 1,
-                function() end))
+                function()
+                    gStateStack:push(MessagePopUpState('Your party has been fully healed!', self.camX, self.camY, 'center', function() end))
+                end))
             end))
         end))
     end

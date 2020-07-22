@@ -1,9 +1,10 @@
 BattleState = Class{__includes = BaseState}
 
-function BattleState:init(playState, player, enemy)
+function BattleState:init(playState, player, enemy, enemyLvl)
     self.playState = playState
     self.player = player
     self.enemy = enemy
+    self.enemyLvl = enemyLvl
 
     self.camX = self.playState.camX
     self.camY = self.playState.camY
@@ -29,7 +30,7 @@ function BattleState:init(playState, player, enemy)
     end
 
     for x = 1, numEnemies do
-        table.insert(self.enemyParty.party.party, Character(ENEMY_DEFS[self.enemy.type], 1))
+        table.insert(self.enemyParty.party.party, Character(ENEMY_DEFS[self.enemy.type], enemyLvl))
     end
     
     for k, char in pairs(self.player.party.party) do

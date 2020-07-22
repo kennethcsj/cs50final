@@ -86,7 +86,8 @@ function MapOne:update(dt)
     end
 
     for k, entity in pairs(self.entities) do
-        if self.player:collides(entity) and not self.player.dead and not entity.dead then
+        if entity.collide and not self.player.dead and not entity.dead then
+            entity.collide = false
             -- first, push a fade in; when that's done, push a battle state and a fade
             -- out, which will fall back to the battle state once it pushes itself off
             gStateStack:push(
@@ -94,7 +95,7 @@ function MapOne:update(dt)
                     r = 255, g = 255, b = 255,
                 }, 1, 
                 function()
-                    gStateStack:push(BattleState(self, self.player, entity))
+                    gStateStack:push(BattleState(self, self.player, entity, 1))
                     gStateStack:push(FadeOutState({
                         r = 255, g = 255, b = 255,
                     }, 1,

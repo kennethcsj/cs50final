@@ -27,6 +27,12 @@ end
 function PlayState:update(dt)
     if love.keyboard.wasPressed('m') then
         gStateStack:push(FieldMenuState(self))
+    elseif love.keyboard.wasPressed('h') then
+        gStateStack:push(DialogueState("Press 'M' to open Menu. " ..
+            "'Backspace' to return. 'Enter' to select/next. 'Esc' to exit game. 'H' to open Help dialouge. " .. 
+            "Fight On Chosen One!", self.level.camX, self.level.camY, 'left', function()
+            end
+        ))
     end
 
     self.level:update(dt)

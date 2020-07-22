@@ -135,6 +135,9 @@ function MapFour:update(dt)
 
     for k, entity in pairs(self.entities) do
         entity:update(dt)
+        if (entity.type == 'boss') and entity.dead then
+            self:complete()
+        end
     end
 
     if love.keyboard.isDown('left') and (self.player.mapX == 1) then
@@ -156,7 +159,7 @@ function MapFour:update(dt)
                 r = 255, g = 255, b = 255,
             }, 1, 
             function()
-                gStateStack:push(BattleState(self, self.player, self.entities[#self.entities]))
+                gStateStack:push(BattleState(self, self.player, self.entities[#self.entities], 1))
                 gStateStack:push(FadeOutState({
                     r = 255, g = 255, b = 255,
                 }, 1,
@@ -204,4 +207,28 @@ function MapFour:updateCamera()
     self.camY = math.max(0,
         math.min(TILE_SIZE * self.tileHeight - VIRTUAL_HEIGHT,
         self.player.y - (VIRTUAL_HEIGHT / 2 - 8)))
+end
+
+function MapFour:complete()
+    gStateStack:push(DialogueState("Well Done Chosen One! You have prevented the future from falling apart. " ..
+        "The world thanks you for your help. " .. "It's time for you to go back. " .. "Good bye Chosen One!", self.camX, self.camY, 'left', function()
+            gStateStack:push(
+                FadeInState({
+                    r = 255, g = 255, b = 255,
+                }, 1, 
+                function()
+                    gStateStack:pop()
+                    gStateStack:push(StartState())
+                    gStateStack:push(FadeOutState({
+                        r = 255, g = 255, b = 255,
+                    }, 1,
+                
+                    function()
+                        -- nothing to do or push here once the fade out is done
+                    end), self.camX-4, self.camY-4)
+                end, self.camX-4, self.camY-4)
+            )       
+            
+        end
+    ))
 end

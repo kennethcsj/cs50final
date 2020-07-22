@@ -162,7 +162,7 @@ function BattleAttackState:attack(attacker, defender, attackerNum)
     if not attacker.isDead then
         
         -- first push a message on who's attacking
-        gStateStack:push(BattleMessageState(attacker.name .. ' attacks ' .. defender.name .. '!',
+        gStateStack:push(BattleMessageState('Lvl. ' .. attacker.level .. ' ' .. attacker.name .. ' attacks ' .. defender.name .. '!',
             function() end, false, self.battleState.camX, self.battleState.camY))
 
         Timer.after(0.5, function()

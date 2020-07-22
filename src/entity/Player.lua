@@ -22,10 +22,8 @@ function Player:init(def)
     
     self.items = {}
 
-    for k = 1, 10 do
-        table.insert(self.items, Item(OBJECT_DEFS['sushi']))
-        self.items[k].count = k
-    end
+    table.insert(self.items, Item(OBJECT_DEFS['sushi']))
+    self.items[#self.items].count = 5
 end
 
 function Player:restart(def)

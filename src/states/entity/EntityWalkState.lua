@@ -77,6 +77,7 @@ function EntityWalkState:attemptMove()
             if (toX == entity.mapX) and (toY == entity.mapY) and not entity.dead then
                 self.entity:changeState('idle')
                 self.entity:changeAnimation('idle-' .. tostring(self.entity.direction))
+                entity.collide = true
                 return
             end
         end
