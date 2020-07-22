@@ -133,9 +133,9 @@ function MapTwo:update(dt)
         end))
     elseif love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
         for k, object in pairs(self.objects) do
-            if object.activation and not object.activated then
+            if object.interactable and not object.interact then
                 if (self.player.direction == 'up') and (self.player.mapY == 11) and ((self.player.mapX == 17) or (self.player.mapX == 18)) then
-                    object.onActivate()
+                    object.onInteract()
                 end
             end
         end
@@ -152,7 +152,7 @@ function MapTwo:generateObjects()
         8
     ))
 
-    self.objects[#self.objects].onActivate = function()
+    self.objects[#self.objects].onInteract = function()
         local items = {}
         local count = 10
         local object = 'sushi'
@@ -173,7 +173,7 @@ function MapTwo:generateObjects()
         end
 
         gStateStack:push(MessagePopUpState('Obtained ' .. tostring(count) .. ' ' .. tostring(object) , self.camX, self.camY, 'center', function()
-            self.objects[#self.objects].activated = true
+            self.objects[#self.objects].interact = true
             self.objects[#self.objects]:changeAnimation('open')
         end))
     end

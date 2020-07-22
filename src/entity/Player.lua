@@ -1,9 +1,7 @@
 --[[
     GD50
-    Pokemon
 
-    Author: Colton Ogden
-    cogden@cs50.harvard.edu
+    Player Class
 ]]
 
 Player = Class{__includes = Entity}
@@ -11,8 +9,8 @@ Player = Class{__includes = Entity}
 function Player:init(def)
     Entity.init(self, def)
 
+    -- Use to create a second party member
     local other = (def.character == 'player-boy') and 'player-girl' or 'player-boy'
-
     self.party = Party {
         party = {
             Character(CHARACTER_DEFS[def.character], 1),
@@ -22,11 +20,13 @@ function Player:init(def)
     
     self.items = {}
 
+    -- Starts with health recovery item
     table.insert(self.items, Item(OBJECT_DEFS['sushi']))
     self.items[#self.items].count = 5
 end
 
 function Player:restart(def)
+    -- Restarts player to the define mapX and mapY
     self.mapX = def.mapX
     self.mapY = def.mapY
 

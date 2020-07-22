@@ -1,9 +1,7 @@
 --[[
     GD50
-    Pokemon
 
-    Author: Colton Ogden
-    cogden@cs50.harvard.edu
+    Object Class
 ]]
 
 Object = Class{}
@@ -12,6 +10,7 @@ function Object:init(def, mapX, mapY, collideX, collideY)
     self.mapX = mapX
     self.mapY = mapY
 
+    -- x and y coordinates for callback
     self.collideX = collideX or mapX
     self.collideY = collideY or mapY
 
@@ -21,11 +20,11 @@ function Object:init(def, mapX, mapY, collideX, collideY)
     -- whether it is consumable or not
     self.consumable = def.consumable
 
-    -- whether it can be activate on enter
-    self.activation = def.activation
-    self.activated = false
+    -- whether it can be activate by pressing enter
+    self.interactable = def.interactable
+    self.interact = false
 
-    -- whether it can be activated on contact
+    -- whether it can be interact on contact
     self.contactable = def.contactable
 
     self.animations = self:createAnimations(def.animations)
@@ -38,6 +37,7 @@ function Object:init(def, mapX, mapY, collideX, collideY)
     -- halfway raised on the tile just to simulate height/perspective
     self.y = (self.mapY - 1) * TILE_SIZE - self.height / 2
 
+    -- set animation to default
     self.currentAnimation = self.animations['default']
 
     -- default empty collision callback
@@ -45,7 +45,7 @@ function Object:init(def, mapX, mapY, collideX, collideY)
 
     self.onConsume = function() end
 
-    self.onActivate = function() end
+    self.onInteract = function() end
 
     self.onContact = function() end
 end
@@ -73,13 +73,6 @@ function Object:updateCoordinates()
 
     -- halfway raised on the tile just to simulate height/perspective
     self.y = (self.mapY - 1) * TILE_SIZE - self.height / 2
-end
-
---[[
-    Called when we interact with this entity, as by pressing enter.
-]]
-function Object:onInteract()
-
 end
 
 function Object:collides(target)

@@ -1,9 +1,7 @@
 --[[
     GD50
-    Pokemon
-
-    Author: Colton Ogden
-    cogden@cs50.harvard.edu
+    
+    Entity Class
 ]]
 
 Entity = Class{}
@@ -25,7 +23,7 @@ function Entity:init(def)
     -- halfway raised on the tile just to simulate height/perspective
     self.y = (self.mapY - 1) * TILE_SIZE - self.height / 2
 
-    self.collide = false
+    -- whether entity is dead or alive
     self.dead = false
 end
 
