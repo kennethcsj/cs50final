@@ -5,7 +5,7 @@ function MessagePopUpState:init(text, camX, camY, alignment, callback)
     self.y = camY
     self.alignment = alignment or 'left'
 
-    self.textbox = Textbox(self.x + VIRTUAL_WIDTH / 2 - VIRTUAL_WIDTH / 4, self.y + VIRTUAL_HEIGHT / 2 - 32, VIRTUAL_WIDTH / 2, 64, text, gFonts['small'], self.alignment)
+    self.textbox = Textbox(self.x + VIRTUAL_WIDTH / 2 - VIRTUAL_WIDTH / 4, self.y + VIRTUAL_HEIGHT / 2 - 32, VIRTUAL_WIDTH / 2, 64, text, VIRTUAL_WIDTH / 2, gFonts['small'], self.alignment)
     self.callback = callback or function() end
 end
 

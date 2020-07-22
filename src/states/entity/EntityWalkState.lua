@@ -63,13 +63,21 @@ function EntityWalkState:attemptMove()
                     return
                 elseif object.consumable then
                     object:onConsume()
-                elseif object.activation then
-                    object:onActivate()
+                elseif object.contactable then
+                    object:onContact()
 
                     self.entity:changeState('idle')
                     self.entity:changeAnimation('idle-' .. tostring(self.entity.direction))
                     return 
                 end
+            end
+        end
+
+        for k, entity in pairs(self.level.entities) do
+            if (toX == entity.mapX) and (toY == entity.mapY) and not entity.dead then
+                self.entity:changeState('idle')
+                self.entity:changeAnimation('idle-' .. tostring(self.entity.direction))
+                return
             end
         end
     end

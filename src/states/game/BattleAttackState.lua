@@ -15,10 +15,17 @@ function BattleAttackState:init(battleState)
 end
 
 function BattleAttackState:enter(params)
+    local alivePlayerParty = {}
+    for k, char in pairs(self.playerParty) do
+        if not char.isDead then
+            table.insert(alivePlayerParty, char)
+        end
+    end
+
     for k, char in pairs(self.enemyParty) do
         if not char.targetSelected then
             char.targetSelected = true
-            char.target = self.playerParty[math.random(#self.playerParty)]
+            char.target = alivePlayerParty[math.random(#alivePlayerParty)]
         end
     end
 
@@ -102,15 +109,22 @@ function BattleAttackState:victory()
 end
 
 function BattleAttackState:faint()
-    self.battleState.player:restart({mapX = 5, mapY = 5})
-    -- restore player pokemon to full health
-    for k, char in pairs(self.playerParty) do
-        char.isDead = false
-        char.currentHP = char.HP
-    end
+    Timer.after(0.5, function()
+        -- when finished, push a everyone dead message
+        gStateStack:push(BattleMessageState('Your party has been killed!', function()
+            self.battleState.player.dead = true
 
-    -- pop off the battle attack state and back into the battle state
-    gStateStack:pop()
+            -- restore player pokemon to full health
+            for k, char in pairs(self.playerParty) do
+                char.isDead = false
+                char.currentHP = char.HP
+            end
+
+            -- pop off the battle attack state and back into the battle state
+            gStateStack:pop()
+        end, true, self.battleState.camX, self.battleState.camY))
+    end)
+    
 end
 
 function BattleAttackState:attack(attacker, defender, attackerNum)

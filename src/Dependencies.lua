@@ -43,6 +43,7 @@ require 'src/states/game/BattleItemState'
 require 'src/states/game/BattleItemSelectState'
 require 'src/states/game/BattleMenuState'
 require 'src/states/game/BattleMessageState'
+require 'src/states/game/DialogueState'
 require 'src/states/game/FadeInState'
 require 'src/states/game/FadeOutState'
 require 'src/states/game/FieldItemSelectMenuState'
@@ -63,6 +64,7 @@ require 'src/world/Tile'
 require 'src/world/TileMap'
 
 require 'src/world/maps/MapHome'
+require 'src/world/maps/MapIntro'
 require 'src/world/maps/MapOne'
 require 'src/world/maps/MapTwo'
 require 'src/world/maps/MapThree'
@@ -85,7 +87,8 @@ gTextures = {
     ['cursor'] = love.graphics.newImage('graphics/cursor.png'),
     ['food'] = love.graphics.newImage('graphics/food.png'),
     ['portals'] = love.graphics.newImage('graphics/portal.png'),
-    ['boss'] = love.graphics.newImage('graphics/boss.png')
+    ['boss'] = love.graphics.newImage('graphics/boss.png'),
+    ['chest'] = love.graphics.newImage('graphics/chests.png')
 }
 
 gFrames = {
@@ -93,5 +96,6 @@ gFrames = {
     ['entities'] = GenerateQuads(gTextures['entities'], 16, 16),
     ['tiles'] = GenerateQuads(gTextures['tiles'], 16, 16),
     ['portals'] = GenerateQuads(gTextures['portals'], 48, 48),
-    ['boss'] = GenerateQuads(gTextures['boss'], 48, 48)
+    ['boss'] = GenerateQuads(gTextures['boss'], 48, 48),
+    ['chest'] = GenerateQuads(gTextures['chest'], 32, 48)
 }

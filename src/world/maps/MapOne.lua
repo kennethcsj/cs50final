@@ -42,6 +42,74 @@ function MapOne:init(playState, player)
     self:updateCamera()
 end
 
+function MapOne:update(dt)
+    self.player:update(dt)
+
+    for k, entity in pairs(self.entities) do
+        entity:processAI({map = self}, dt)
+        entity:update(dt)
+    end
+
+    if love.keyboard.isDown('right') and (self.player.mapX == self.tileWidth) then
+        gStateStack:push(FadeInState({
+            r = 0, g = 0, b = 0
+        }, 1,
+        function()            
+            self.playState.level = MapThree(self.playState, self.player)
+            gStateStack:push(FadeOutState({
+                r = 0, g = 0, b = 0
+            }, 1,
+            function() end))
+        end))
+    elseif love.keyboard.isDown('up') and (self.player.mapY == 1) then
+        gStateStack:push(FadeInState({
+            r = 0, g = 0, b = 0
+        }, 1,
+        function()            
+            self.playState.level = MapTwo(self.playState, self.player)
+            gStateStack:push(FadeOutState({
+                r = 0, g = 0, b = 0
+            }, 1,
+            function() end))
+        end))
+    elseif love.keyboard.isDown('left') and (self.player.mapX == 1) then
+        gStateStack:push(FadeInState({
+            r = 0, g = 0, b = 0
+        }, 1,
+        function()            
+            self.playState.level = MapHome(self.playState, self.player)
+            gStateStack:push(FadeOutState({
+                r = 0, g = 0, b = 0
+            }, 1,
+            function() end))
+        end))
+    end
+
+    for k, entity in pairs(self.entities) do
+        if self.player:collides(entity) and not self.player.dead and not entity.dead then
+            -- first, push a fade in; when that's done, push a battle state and a fade
+            -- out, which will fall back to the battle state once it pushes itself off
+            gStateStack:push(
+                FadeInState({
+                    r = 255, g = 255, b = 255,
+                }, 1, 
+                function()
+                    gStateStack:push(BattleState(self, self.player, entity))
+                    gStateStack:push(FadeOutState({
+                        r = 255, g = 255, b = 255,
+                    }, 1,
+                
+                    function()
+                        -- nothing to do or push here once the fade out is done
+                    end), self.camX-4, self.camY-4)
+                end, self.camX-4, self.camY-4)
+            )
+        end
+    end
+
+    self:updateCamera()
+end
+
 function MapOne:render()
     -- translate the entire view of the scene to emulate a camera
     love.graphics.translate(-math.floor(self.camX), -math.floor(self.camY))
@@ -101,52 +169,6 @@ function MapOne:createMap()
             end
         end
     end
-end
-
-function MapOne:update(dt)
-    self.player:update(dt)
-
-    for k, entity in pairs(self.entities) do
-        entity:processAI({map = self}, dt)
-        entity:update(dt)
-    end
-
-    if love.keyboard.isDown('right') and (self.player.mapX == self.tileWidth) then
-        gStateStack:push(FadeInState({
-            r = 0, g = 0, b = 0
-        }, 1,
-        function()            
-            self.playState.level = MapThree(self.playState, self.player)
-            gStateStack:push(FadeOutState({
-                r = 0, g = 0, b = 0
-            }, 1,
-            function() end))
-        end))
-    elseif love.keyboard.isDown('up') and (self.player.mapY == 1) then
-        gStateStack:push(FadeInState({
-            r = 0, g = 0, b = 0
-        }, 1,
-        function()            
-            self.playState.level = MapTwo(self.playState, self.player)
-            gStateStack:push(FadeOutState({
-                r = 0, g = 0, b = 0
-            }, 1,
-            function() end))
-        end))
-    elseif love.keyboard.isDown('left') and (self.player.mapX == 1) then
-        gStateStack:push(FadeInState({
-            r = 0, g = 0, b = 0
-        }, 1,
-        function()            
-            self.playState.level = MapHome(self.playState, self.player)
-            gStateStack:push(FadeOutState({
-                r = 0, g = 0, b = 0
-            }, 1,
-            function() end))
-        end))
-    end
-
-    self:updateCamera()
 end
 
 function MapOne:generateEntities()

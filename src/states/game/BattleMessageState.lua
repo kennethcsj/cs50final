@@ -9,7 +9,7 @@
 BattleMessageState = Class{__includes = BaseState}
 
 function BattleMessageState:init(msg, onClose, canInput, x, y)
-    self.textbox = Textbox(x, y + VIRTUAL_HEIGHT - 64, VIRTUAL_WIDTH, 64, msg, gFonts['medium'])
+    self.textbox = Textbox(x, y + VIRTUAL_HEIGHT - 64, VIRTUAL_WIDTH, 64, msg, VIRTUAL_WIDTH / 2, gFonts['medium'])
 
     -- function to be called once this message is popped
     self.onClose = onClose or function() end

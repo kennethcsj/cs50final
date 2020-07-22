@@ -11,16 +11,17 @@ PlayState = Class{__includes = BaseState}
 function PlayState:init(def)
     self.player = Player {
         animations = ENTITY_DEFS[def.character].animations,
-        mapX = 15,
-        mapY = 13,
+        mapX = 12,
+        mapY = 9,
         width = 16,
         height = 16,
         type = 'player',
         character = def.character
     }
-    self.restart = true
+    self.firstEnter = true
+    self.restart = false
 
-    self.level = MapHome(self, self.player)
+    self.level = MapIntro(self, self.player)
 end
 
 function PlayState:update(dt)

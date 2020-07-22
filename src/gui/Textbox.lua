@@ -8,12 +8,13 @@
 
 Textbox = Class{}
 
-function Textbox:init(x, y, width, height, text, font, alignment, input)
+function Textbox:init(x, y, width, height, text, size, font, alignment, input)
     self.panel = Panel(x, y, width, height)
     self.x = x
     self.y = y
     self.width = width
     self.height = height
+    self.size = size
     self.input = input or true
 
     self.text = text
@@ -77,6 +78,6 @@ function Textbox:render()
     
     love.graphics.setFont(self.font)
     for i = 1, #self.displayingChunks do
-        love.graphics.printf(self.displayingChunks[i], self.x + 3, self.y + 4 + (i - 1) * 16, VIRTUAL_WIDTH / 2, self.alignment)
+        love.graphics.printf(self.displayingChunks[i], self.x + 3, self.y + 4 + (i - 1) * 16, self.size, self.alignment)
     end
 end

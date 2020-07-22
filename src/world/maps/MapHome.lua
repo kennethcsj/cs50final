@@ -28,7 +28,12 @@ function MapHome:init(playState, player)
 
     self.player.stateMachine:change('idle')
 
-    if not self.playState.restart then
+    if self.playState.restart or self.playState.firstEnter then
+        self.playState.restart = false
+        self.player.mapX = 15
+        self.player.mapY = 13
+        self.player.direction = 'down'
+    else
         if self.player.direction == 'up' then
             self.player.mapY = self.tileHeight
         elseif self.player.direction == 'left' then
@@ -40,13 +45,45 @@ function MapHome:init(playState, player)
         else
             self.player.mapY = 1
         end
-    else
-        self.playState.restart = false
-        self.player.direction = 'down'
     end
 
     self.player:updateCoordinates()
     self:updateCamera()
+end
+
+function MapHome:update(dt)
+    if self.playState.firstEnter then
+        gStateStack:push(DialogueState("Welcome Chosen One! Press 'M' to open Menu. " ..
+            "'Backspace' to return. 'Enter' to select/next. 'Esc' to exit game. Fight On!", self.camX, self.camY, 'left', function()       
+                self.playState.firstEnter = false
+            end
+        ))
+    else
+        self.player:update(dt)
+
+        for k, entity in pairs(self.entities) do
+            entity:update(dt)
+        end
+
+        for k, object in pairs(self.objects) do
+            object:update(dt)
+        end
+
+        if love.keyboard.isDown('right') and (self.player.mapX == self.tileWidth) then
+            gStateStack:push(FadeInState({
+                r = 0, g = 0, b = 0
+            }, 1,
+            function()            
+                self.playState.level = MapOne(self.playState, self.player)
+                gStateStack:push(FadeOutState({
+                    r = 0, g = 0, b = 0
+                }, 1,
+                function() end))
+            end))
+        end
+
+        self:updateCamera()
+    end
 end
 
 function MapHome:render()
@@ -92,33 +129,6 @@ function MapHome:createMap()
     end
 end
 
-function MapHome:update(dt)
-    self.player:update(dt)
-
-    for k, entity in pairs(self.entities) do
-        entity:update(dt)
-    end
-
-    for k, object in pairs(self.objects) do
-        object:update(dt)
-    end
-
-    if love.keyboard.isDown('right') and (self.player.mapX == self.tileWidth) then
-        gStateStack:push(FadeInState({
-            r = 0, g = 0, b = 0
-        }, 1,
-        function()            
-            self.playState.level = MapFour(self.playState, self.player)
-            gStateStack:push(FadeOutState({
-                r = 0, g = 0, b = 0
-            }, 1,
-            function() end))
-        end))
-    end
-
-    self:updateCamera()
-end
-
 function MapHome:updateCamera()
     -- clamp movement of the camera's X between 0 and the map bounds - virtual width,
     -- setting it half the screen to the left of the player so they are in the center
@@ -145,7 +155,7 @@ function MapHome:generateObjects()
         15
     ))
 
-    self.objects[#self.objects].onActivate = function()
+    self.objects[#self.objects].onContact = function()
         gStateStack:push(MessageConfirmState('Recover Party??', self.camX, self.camY, 'center', function()
             for k, char in pairs(self.player.party.party) do
                 char.currentHP = char.HP

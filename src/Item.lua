@@ -6,6 +6,7 @@ function Item:init(def)
     self.stat = def.stat
     self.effect = def.effect
     self.texture = def.texture
+    self.text = def.text
 
     self.x = nil
     self.y = nil
@@ -31,5 +32,7 @@ function Item:render()
     else
         love.graphics.setColor(0, 0, 0, 255)
     end
-    love.graphics.print(' x ' .. self.count, self.x + 32, self.y)
+    love.graphics.print(' x ' .. self.count, self.x + 16, self.y)
+    love.graphics.setFont(gFonts['small-medium'])
+    love.graphics.print(self.text, self.x + 64, self.y)
 end

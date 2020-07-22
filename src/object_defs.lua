@@ -4,6 +4,7 @@ OBJECT_DEFS = {
         type = 'recovery',
         effect = 5,
         texture = 'food',
-        stat = 'hp'
+        stat = 'hp',
+        text = 'Recovers 5 HP'
     },
 }

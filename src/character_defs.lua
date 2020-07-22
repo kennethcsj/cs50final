@@ -82,12 +82,12 @@ ENEMY_DEFS = {
         animations = {
             ['idle-left'] = {
                 frames = {7, 8, 9},
-                interval = 0.3,
+                interval = 0.2,
                 texture = 'boss'
             },
             ['idle-right'] = {
                 frames = {13, 14, 15},
-                interval = 0.3,
+                interval = 0.2,
                 texture = 'boss'
             },
         }

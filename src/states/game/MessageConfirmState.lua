@@ -6,7 +6,7 @@ function MessageConfirmState:init(text, camX, camY, alignment, callback)
     self.alignment = alignment or 'left'
 
     self.text = text or 'Confirm Selection?'
-    self.textbox = Textbox(self.x + VIRTUAL_WIDTH / 2 - VIRTUAL_WIDTH / 4, self.y + VIRTUAL_HEIGHT / 2 - 32, VIRTUAL_WIDTH / 2, 64, self.text, gFonts['small'], self.alignment, false)
+    self.textbox = Textbox(self.x + VIRTUAL_WIDTH / 2 - VIRTUAL_WIDTH / 4, self.y + VIRTUAL_HEIGHT / 2 - 32, VIRTUAL_WIDTH / 2, 64, self.text, VIRTUAL_WIDTH / 2, gFonts['small'], self.alignment, false)
     self.callback = callback or function() end
 
     self.items = {'Yes', 'No'}

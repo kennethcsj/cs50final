@@ -112,6 +112,27 @@ end
 function MapFour:update(dt)
     self.player:update(dt)
 
+    if self.player.dead then
+        self.playState.restart = true
+        self.player.dead = false
+
+        gStateStack:push(DialogueState("" .. 
+            "Your party remains have been brought back to the portal to be revived." ..
+            " Do not give up just yet!", self.camX, self.camY, 'center', function()
+                gStateStack:push(FadeInState({
+                    r = 0, g = 0, b = 0
+                }, 1,
+                function()            
+                    self.playState.level = MapHome(self.playState, self.player)
+                    gStateStack:push(FadeOutState({
+                        r = 0, g = 0, b = 0
+                    }, 1,
+                    function() end))
+                end))
+            end
+        ))
+    end
+
     for k, entity in pairs(self.entities) do
         entity:update(dt)
     end

@@ -19,6 +19,7 @@ function MapTwo:init(playState, player)
     self.walkableTiles = {}
 
     self:createMap()
+    self:generateObjects()
     self:generateEntities()
 
     self.player = player
@@ -68,6 +69,10 @@ function MapTwo:render()
         if not entity.dead then
             entity:render()
         end
+    end
+
+    for k, object in pairs(self.objects) do
+        object:render()
     end
 
     self.player:render()
@@ -126,9 +131,52 @@ function MapTwo:update(dt)
             }, 1,
             function() end))
         end))
+    elseif love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+        for k, object in pairs(self.objects) do
+            if object.activation and not object.activated then
+                if (self.player.direction == 'up') and (self.player.mapY == 11) and ((self.player.mapX == 17) or (self.player.mapX == 18)) then
+                    object.onActivate()
+                end
+            end
+        end
     end
 
     self:updateCamera()
+end
+
+function MapTwo:generateObjects()
+    -- generate portal with function
+    table.insert(self.objects, Object(
+        MAP_DEFS['chest'],
+        17,
+        8
+    ))
+
+    self.objects[#self.objects].onActivate = function()
+        local items = {}
+        local count = 10
+        local object = 'sushi'
+
+        table.insert(items, Item(OBJECT_DEFS[object]))
+        items[#items].count = count
+
+        for k, item in pairs(self.player.items) do
+            if (item.name == 'Sushi') then
+                item.count = item.count + items[#items].count
+                table.remove(items, #items)
+                break
+            end
+        end
+
+        if (#items > 0) then
+            table.insert(self.player.items, items[#items])
+        end
+
+        gStateStack:push(MessagePopUpState('Obtained ' .. tostring(count) .. ' ' .. tostring(object) , self.camX, self.camY, 'center', function()
+            self.objects[#self.objects].activated = true
+            self.objects[#self.objects]:changeAnimation('open')
+        end))
+    end
 end
 
 function MapTwo:generateEntities()

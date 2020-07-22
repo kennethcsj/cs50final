@@ -21,8 +21,12 @@ function Object:init(def, mapX, mapY, collideX, collideY)
     -- whether it is consumable or not
     self.consumable = def.consumable
 
-    -- whether it can be activate on collision
+    -- whether it can be activate on enter
     self.activation = def.activation
+    self.activated = false
+
+    -- whether it can be activated on contact
+    self.contactable = def.contactable
 
     self.animations = self:createAnimations(def.animations)
 
@@ -42,6 +46,8 @@ function Object:init(def, mapX, mapY, collideX, collideY)
     self.onConsume = function() end
 
     self.onActivate = function() end
+
+    self.onContact = function() end
 end
 
 function Object:changeAnimation(name)
