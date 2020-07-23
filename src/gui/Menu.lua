@@ -1,9 +1,7 @@
 --[[
     GD50
-    Pokemon
-
-    Author: Colton Ogden
-    cogden@cs50.harvard.edu
+    
+    Menu Class
 
     A Menu is simply a Selection layered onto a Panel, at least for use in this
     game. More complicated Menus may be collections of Panels and Selections that

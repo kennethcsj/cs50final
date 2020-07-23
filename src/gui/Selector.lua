@@ -1,6 +1,8 @@
 --[[
     GD50
-    The Selector class creates a selection for items and obtain current selection.
+
+    Selector Class
+    Similar to Selection Class. Obtains current selection from table of items
 ]]
 
 Selector = Class{}
