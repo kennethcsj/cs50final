@@ -1,9 +1,7 @@
 --[[
     GD50
-    Pokemon
-
-    Author: Colton Ogden
-    cogden@cs50.harvard.edu
+    
+    EntityWalkState Class
 ]]
 
 EntityWalkState = Class{__includes = EntityBaseState}
@@ -45,41 +43,61 @@ function EntityWalkState:attemptMove()
         return
     end
 
+    -- break out if we try to move to an unwalkable tile
     if not self.level.walkableTiles[toY][toX] then
         self.entity:changeState('idle')
         self.entity:changeAnimation('idle-' .. tostring(self.entity.direction))
         return
     end
 
-    -- return on collide with object
-    if (self.entity.type == 'player') then
-        for k, object in pairs(self.level.objects) do
-            if (toX == object.collideX) and (toY == object.collideY) then
-                if object.solid then
+    -- entity collides with object
+    for k, object in pairs(self.level.objects) do
+        if (toX == object.collideX) and (toY == object.collideY) then
+            if object.solid then
+                -- only call function if entity is player
+                if (self.entity.type == 'player') then
                     object:onCollide()
+                end
 
+                -- break out if object is solid
+                self.entity:changeState('idle')
+                self.entity:changeAnimation('idle-' .. tostring(self.entity.direction))
+                return
+            elseif object.consumable then
+                -- only call function if entity is player
+                if (self.entity.type == 'player') then
+                    object:onConsume()
+                else
+                    -- break out if entity is enemy
                     self.entity:changeState('idle')
                     self.entity:changeAnimation('idle-' .. tostring(self.entity.direction))
                     return
-                elseif object.consumable then
-                    object:onConsume()
-                elseif object.contactable then
-                    object:onContact()
-
-                    self.entity:changeState('idle')
-                    self.entity:changeAnimation('idle-' .. tostring(self.entity.direction))
-                    return 
                 end
-            end
-        end
+            elseif object.contactable then
+                -- only call function if entity is player
+                if (self.entity.type == 'player') then
+                    object:onContact()
+                end
 
-        for k, entity in pairs(self.level.entities) do
-            if (toX == entity.mapX) and (toY == entity.mapY) and not entity.dead then
+                -- break out if object is contactable
                 self.entity:changeState('idle')
                 self.entity:changeAnimation('idle-' .. tostring(self.entity.direction))
-                entity.collide = true
-                return
+                return 
             end
+        end
+    end
+
+    -- entity collision with other entities
+    for k, entity in pairs(self.level.entities) do
+        if (toX == entity.mapX) and (toY == entity.mapY) and not entity.dead then
+            self.entity:changeState('idle')
+            self.entity:changeAnimation('idle-' .. tostring(self.entity.direction))
+            
+            -- allow battle when collide with entity
+            if (self.entity.type == 'player') then
+                entity.collide = true
+            end
+            return
         end
     end
 

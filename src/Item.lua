@@ -33,6 +33,6 @@ function Item:render()
         love.graphics.setColor(0, 0, 0, 255)
     end
     love.graphics.print(' x ' .. self.count, self.x + 16, self.y)
-    love.graphics.setFont(gFonts['small-medium'])
-    love.graphics.print(self.text, self.x + 64, self.y)
+    love.graphics.setFont(gFonts['small'])
+    love.graphics.print(self.text, self.x + 64, self.y + 4)
 end
