@@ -36,24 +36,27 @@ function FieldItemSelectMenuState:update(dt)
     if love.keyboard.wasPressed('backspace') then
         gStateStack:pop()
     elseif love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
-        -- Use Item
-        self.items[self.itemPosition]:use(self.party[self.select.currentSelection])
-
-        local name = self.items[self.itemPosition].name
-
-        -- remove item from player item list
-        if (self.items[self.itemPosition].count <= 0) then
-            table.remove(self.items, self.itemPosition)
-        end
-
-        -- push confirmation message
-        local text = tostring(name) .. ' used on ' .. tostring(self.party[self.select.currentSelection].name) .. '!'
         gStateStack:push(MessageConfirmState(nil, self.playState.level.camX, self.playState.level.camY, 'center', function()
-            gStateStack:pop()
+            -- Use Item
+            if (self.items[self.itemPosition]:use(self.party[self.select.currentSelection])) then
+                local name = self.items[self.itemPosition].name
 
-            gStateStack:push(MessagePopUpState(text, self.playState.level.camX, self.playState.level.camY, 'center', function()
-                gStateStack:pop() 
-            end))
+                -- remove item from player item list
+                if (self.items[self.itemPosition].count <= 0) then
+                    table.remove(self.items, self.itemPosition)
+                end
+
+                -- push confirmation message
+                local text = tostring(name) .. ' used on ' .. tostring(self.party[self.select.currentSelection].name) .. '!'
+
+                gStateStack:push(MessagePopUpState(text, self.playState.level.camX, self.playState.level.camY, 'center', function()
+                    gStateStack:pop() 
+                end))
+            else
+                gStateStack:push(MessagePopUpState('Ineffective usage of item', self.playState.level.camX, self.playState.level.camY, 'center', function()
+                    gStateStack:pop() 
+                end))
+            end
         end))
     end
 

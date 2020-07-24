@@ -55,7 +55,7 @@ function BattleAttackState:checkDeaths()
     local numEnemyAlive = 0
     for k, char in pairs(self.enemyParty) do
         if char.currentHP <= 0 then
-            -- drop enemy sprite down below the window
+            -- disappear enemy sprite
             Timer.tween(0.5, {
                 [char] = {opacity = 0},
                 [char.healthBar] = {opacity = 0}
@@ -71,6 +71,10 @@ function BattleAttackState:checkDeaths()
     local numPlayerAlive = 0
     for k, char in pairs(self.playerParty) do
         if char.currentHP <= 0 then
+            -- grey player sprite
+            Timer.tween(0.5, {
+                [char] = {r = 64, g = 64, b = 64},
+            })
             char.isDead = true
         else
             char.isDead = false

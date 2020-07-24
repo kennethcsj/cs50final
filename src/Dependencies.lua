@@ -7,7 +7,7 @@ require 'src/Animation'
 require 'src/constants'
 require 'src/Character'
 require 'src/character_defs'
-require 'src/object_defs'
+require 'src/item_defs'
 require 'src/Party'
 require 'src/Object'
 require 'src/Item'
@@ -87,7 +87,8 @@ gTextures = {
     ['food'] = love.graphics.newImage('graphics/food.png'),
     ['portals'] = love.graphics.newImage('graphics/portal.png'),
     ['boss'] = love.graphics.newImage('graphics/boss.png'),
-    ['chest'] = love.graphics.newImage('graphics/chests.png')
+    ['chest'] = love.graphics.newImage('graphics/chests.png'),
+    ['foods'] = love.graphics.newImage('graphics/foods.png'),
 }
 
 gFrames = {
@@ -96,5 +97,6 @@ gFrames = {
     ['tiles'] = GenerateQuads(gTextures['tiles'], 16, 16),
     ['portals'] = GenerateQuads(gTextures['portals'], 48, 48),
     ['boss'] = GenerateQuads(gTextures['boss'], 48, 48),
-    ['chest'] = GenerateQuads(gTextures['chest'], 32, 48)
+    ['chest'] = GenerateQuads(gTextures['chest'], 32, 48),
+    ['foods'] = GenerateQuads(gTextures['foods'], 16, 16)
 }

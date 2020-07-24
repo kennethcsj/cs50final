@@ -46,6 +46,9 @@ function Character:init(def, level)
     self.currentScreenX = nil
     self.currentScreenY = nil
 
+    self.r = def.r or 255
+    self.g = def.g or 255
+    self.b = def.b or 255
     self.opacity = def.opacity or 255
 
     -- used to determine the target
@@ -123,6 +126,6 @@ function Character:increaseStat(stat, increaseAmount)
 end
 
 function Character:render()
-    love.graphics.setColor(255, 255, 255, self.opacity)
+    love.graphics.setColor(self.r, self.b, self.g, self.opacity)
     love.graphics.draw(gTextures[self.currentAnimation.texture], gFrames[self.currentAnimation.texture][self.currentAnimation:getCurrentFrame()], self.currentScreenX, self.currentScreenY)
 end
