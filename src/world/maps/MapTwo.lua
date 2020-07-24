@@ -1,3 +1,9 @@
+--[[
+    GD50
+
+    MapTwo Class
+]]
+
 MapTwo = Class{}
 
 function MapTwo:init(playState, player)
@@ -43,6 +49,62 @@ function MapTwo:init(playState, player)
     end
 
     self.player:updateCoordinates()
+
+    self:updateCamera()
+end
+
+function MapTwo:update(dt)
+    self.player:update(dt)
+
+    for k, entity in pairs(self.entities) do
+        entity:processAI({map = self}, dt)
+        entity:update(dt)
+    end
+
+    if love.keyboard.isDown('down') and (self.player.mapY == self.tileHeight) then
+        gStateStack:push(FadeInState({
+            r = 0, g = 0, b = 0
+        }, 1,
+        function()            
+            self.playState.level = MapOne(self.playState, self.player)
+            gStateStack:push(FadeOutState({
+                r = 0, g = 0, b = 0
+            }, 1,
+            function() end))
+        end))
+    elseif love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+        for k, object in pairs(self.objects) do
+            if object.interactable and not object.interact then
+                if (self.player.direction == 'up') and (self.player.mapY == 11) and ((self.player.mapX == 17) or (self.player.mapX == 18)) then
+                    object.onInteract()
+                end
+            end
+        end
+    end
+
+    -- checks if player collides with entity
+    for k, entity in pairs(self.entities) do
+        if entity.collide and not self.player.dead and not entity.dead then
+            entity.collide = false
+            -- first, push a fade in; when that's done, push a battle state and a fade
+            -- out, which will fall back to the battle state once it pushes itself off
+            gStateStack:push(
+                FadeInState({
+                    r = 255, g = 255, b = 255,
+                }, 1, 
+                function()
+                    gStateStack:push(BattleState(self, self.player, entity, 1))
+                    gStateStack:push(FadeOutState({
+                        r = 255, g = 255, b = 255,
+                    }, 1,
+                
+                    function()
+                        -- nothing to do or push here once the fade out is done
+                    end), self.camX-4, self.camY-4)
+                end, self.camX-4, self.camY-4)
+            )
+        end
+    end
 
     self:updateCamera()
 end
@@ -112,38 +174,6 @@ function MapTwo:createMap()
     end
 end
 
-function MapTwo:update(dt)
-    self.player:update(dt)
-
-    for k, entity in pairs(self.entities) do
-        entity:processAI({map = self}, dt)
-        entity:update(dt)
-    end
-
-    if love.keyboard.isDown('down') and (self.player.mapY == self.tileHeight) then
-        gStateStack:push(FadeInState({
-            r = 0, g = 0, b = 0
-        }, 1,
-        function()            
-            self.playState.level = MapOne(self.playState, self.player)
-            gStateStack:push(FadeOutState({
-                r = 0, g = 0, b = 0
-            }, 1,
-            function() end))
-        end))
-    elseif love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
-        for k, object in pairs(self.objects) do
-            if object.interactable and not object.interact then
-                if (self.player.direction == 'up') and (self.player.mapY == 11) and ((self.player.mapX == 17) or (self.player.mapX == 18)) then
-                    object.onInteract()
-                end
-            end
-        end
-    end
-
-    self:updateCamera()
-end
-
 function MapTwo:generateObjects()
     -- generate portal with function
     table.insert(self.objects, Object(
@@ -182,6 +212,7 @@ end
 function MapTwo:generateEntities()
     local type = 'bat'
 
+    -- creates enemy entities with the following positions
     local mapPositionX, mapPositionY = {19, 10, 25}, {15, 18, 17}
 
     for k, value in pairs(mapPositionX) do

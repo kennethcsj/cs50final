@@ -1,3 +1,9 @@
+--[[
+    GD50
+    
+    MapOne Class
+]]
+
 MapOne = Class{}
 
 function MapOne:init(playState, player)
@@ -26,6 +32,7 @@ function MapOne:init(playState, player)
 
     self.player.stateMachine:change('idle')
 
+    -- sets the position of the player on entering the map
     if self.player.direction == 'up' then
         self.player.mapY = self.tileHeight
     elseif self.player.direction == 'left' then
@@ -85,6 +92,7 @@ function MapOne:update(dt)
         end))
     end
 
+    -- checks if player collides with entity
     for k, entity in pairs(self.entities) do
         if entity.collide and not self.player.dead and not entity.dead then
             entity.collide = false
@@ -139,6 +147,7 @@ function MapOne:render()
 end
 
 function MapOne:createMap()
+    -- create the tiles for the tile map
     for y = 1, self.tileHeight do
         table.insert(self.walkableTiles, {})
 
@@ -172,9 +181,18 @@ function MapOne:createMap()
     end
 end
 
+function MapOne:initMap()
+    -- create the layout of the map
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, self.tileWidth, self.tileHeight, TILE_IDS['sand'][math.random(#TILE_IDS['sand'])]))
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, 15, 15, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 20, 1, 30, 15, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 20, self.tileWidth, self.tileHeight, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
+end
+
 function MapOne:generateEntities()
     local type = 'bat'
 
+    -- creates 3 bats with the following coordinates
     local mapPositionX, mapPositionY = {19, 10, 25}, {15, 18, 17}
 
     for k, value in pairs(mapPositionX) do
@@ -211,11 +229,4 @@ function MapOne:updateCamera()
     self.camY = math.max(0,
         math.min(TILE_SIZE * self.tileHeight - VIRTUAL_HEIGHT,
         self.player.y - (VIRTUAL_HEIGHT / 2 - 8)))
-end
-
-function MapOne:initMap()
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, self.tileWidth, self.tileHeight, TILE_IDS['sand'][math.random(#TILE_IDS['sand'])]))
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, 15, 15, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 20, 1, 30, 15, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 20, self.tileWidth, self.tileHeight, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
 end

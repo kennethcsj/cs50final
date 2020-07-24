@@ -1,3 +1,9 @@
+--[[
+    GD50
+    
+    MapFour Class
+]]
+
 MapFour = Class{}
 
 function MapFour:init(playState, player)
@@ -8,17 +14,13 @@ function MapFour:init(playState, player)
     self.tileHeight = 30
 
     self.layers = {}
-
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, self.tileWidth, self.tileHeight, TILE_IDS['sand'][math.random(#TILE_IDS['sand'])]))
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, 15, 15, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, self.tileWidth, 10, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 19, 1, self.tileWidth, self.tileHeight, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 20, self.tileWidth, self.tileHeight, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
-
     self.entities = {}
     self.objects = {}
+    
+    -- determines which tile is walkable
     self.walkableTiles = {}
 
+    self:initMap()
     self:createMap()
     self:generateEntities()
 
@@ -32,6 +34,7 @@ function MapFour:init(playState, player)
 
     self.player.stateMachine:change('idle')
 
+    -- sets the coordinate of the player on entering map
     if self.player.direction == 'up' then
         self.player.mapY = self.tileHeight
     elseif self.player.direction == 'left' then
@@ -44,6 +47,78 @@ function MapFour:init(playState, player)
     end
 
     self.player:updateCoordinates()
+
+    self:updateCamera()
+end
+
+function MapFour:update(dt)
+    self.player:update(dt)
+
+    -- restart the game if all player party is dead
+    if self.player.dead then
+        self.playState.restart = true
+        self.player.dead = false
+
+        gStateStack:push(DialogueState("" .. 
+            "Your party remains have been brought back to the portal to be revived." ..
+            " Do not give up just yet!", self.camX, self.camY, 'center', function()
+                gStateStack:push(FadeInState({
+                    r = 0, g = 0, b = 0
+                }, 1,
+                function()            
+                    self.playState.level = MapHome(self.playState, self.player)
+                    gStateStack:push(FadeOutState({
+                        r = 0, g = 0, b = 0
+                    }, 1,
+                    function() end))
+                end))
+            end
+        ))
+    end
+
+    -- if boss is dead, end the game
+    for k, entity in pairs(self.entities) do
+        entity:update(dt)
+        if (entity.type == 'boss') and entity.dead then
+            self:complete()
+        end
+    end
+
+    if love.keyboard.isDown('left') and (self.player.mapX == 1) then
+        gStateStack:push(FadeInState({
+            r = 0, g = 0, b = 0
+        }, 1,
+        function()            
+            self.playState.level = MapThree(self.playState, self.player)
+            gStateStack:push(FadeOutState({
+                r = 0, g = 0, b = 0
+            }, 1,
+            function() end))
+        end))
+    elseif (love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return')) and (self.player.mapY == 11) then
+        -- first, push a fade in; when that's done, push a battle state and a fade
+        -- out, which will fall back to the battle state once it pushes itself off
+        gStateStack:push(DialogueState("" .. 
+            "Bat Boss: Yuo won't be able to defeat me!" ..
+            "", self.camX, self.camY, 'center', function()
+                gStateStack:push(
+                    FadeInState({
+                        r = 255, g = 255, b = 255,
+                    }, 1, 
+                    function()
+                        gStateStack:push(BattleState(self, self.player, self.entities[#self.entities], 1))
+                        gStateStack:push(FadeOutState({
+                            r = 255, g = 255, b = 255,
+                        }, 1,
+                    
+                        function()
+                            -- nothing to do or push here once the fade out is done
+                        end), self.camX-4, self.camY-4)
+                    end, self.camX-4, self.camY-4)
+                )
+            end
+        ))
+    end
 
     self:updateCamera()
 end
@@ -109,69 +184,12 @@ function MapFour:createMap()
     end
 end
 
-function MapFour:update(dt)
-    self.player:update(dt)
-
-    if self.player.dead then
-        self.playState.restart = true
-        self.player.dead = false
-
-        gStateStack:push(DialogueState("" .. 
-            "Your party remains have been brought back to the portal to be revived." ..
-            " Do not give up just yet!", self.camX, self.camY, 'center', function()
-                gStateStack:push(FadeInState({
-                    r = 0, g = 0, b = 0
-                }, 1,
-                function()            
-                    self.playState.level = MapHome(self.playState, self.player)
-                    gStateStack:push(FadeOutState({
-                        r = 0, g = 0, b = 0
-                    }, 1,
-                    function() end))
-                end))
-            end
-        ))
-    end
-
-    for k, entity in pairs(self.entities) do
-        entity:update(dt)
-        if (entity.type == 'boss') and entity.dead then
-            self:complete()
-        end
-    end
-
-    if love.keyboard.isDown('left') and (self.player.mapX == 1) then
-        gStateStack:push(FadeInState({
-            r = 0, g = 0, b = 0
-        }, 1,
-        function()            
-            self.playState.level = MapThree(self.playState, self.player)
-            gStateStack:push(FadeOutState({
-                r = 0, g = 0, b = 0
-            }, 1,
-            function() end))
-        end))
-    elseif (love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return')) and (self.player.mapY == 11) then
-        -- first, push a fade in; when that's done, push a battle state and a fade
-        -- out, which will fall back to the battle state once it pushes itself off
-        gStateStack:push(
-            FadeInState({
-                r = 255, g = 255, b = 255,
-            }, 1, 
-            function()
-                gStateStack:push(BattleState(self, self.player, self.entities[#self.entities], 1))
-                gStateStack:push(FadeOutState({
-                    r = 255, g = 255, b = 255,
-                }, 1,
-            
-                function()
-                    -- nothing to do or push here once the fade out is done
-                end), self.camX-4, self.camY-4)
-            end, self.camX-4, self.camY-4)
-        )
-    end
-
-    self:updateCamera()
+function MapFour:initMap()
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, self.tileWidth, self.tileHeight, TILE_IDS['sand'][math.random(#TILE_IDS['sand'])]))
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, 15, 15, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, self.tileWidth, 10, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 19, 1, self.tileWidth, self.tileHeight, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 20, self.tileWidth, self.tileHeight, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
 end
 
 function MapFour:generateEntities()
@@ -210,6 +228,7 @@ function MapFour:updateCamera()
 end
 
 function MapFour:complete()
+    -- game end dialogue
     gStateStack:push(DialogueState("Well Done Chosen One! You have prevented the future from falling apart. " ..
         "The world thanks you for your help. " .. "It's time for you to go back. " .. "Good bye Chosen One!", self.camX, self.camY, 'left', function()
             gStateStack:push(
@@ -218,6 +237,8 @@ function MapFour:complete()
                 }, 1, 
                 function()
                     gStateStack:pop()
+
+                    -- goes back to StartState
                     gStateStack:push(StartState())
                     gStateStack:push(FadeOutState({
                         r = 255, g = 255, b = 255,

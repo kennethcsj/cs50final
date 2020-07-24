@@ -1,3 +1,9 @@
+--[[
+    GD50
+    
+    MapIntro Class
+]]
+
 MapIntro = Class{}
 
 function MapIntro:init(playState, player)
@@ -16,6 +22,7 @@ function MapIntro:init(playState, player)
 end
 
 function MapIntro:update(dt)
+    -- Introduction to the game
     gStateStack:push(DialogueState("" .. 
         "Chosen One.. " .. "Your world has been plagued with a flu virus and is on the verge of falling apart. " ..
         "We have brought you to the past to prevent the spread of the virus. " .. 

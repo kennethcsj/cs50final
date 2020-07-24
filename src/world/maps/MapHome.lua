@@ -1,3 +1,9 @@
+--[[
+    GD50
+
+    MapHome Class
+]]
+
 MapHome = Class{}
 
 function MapHome:init(playState, player)
@@ -28,6 +34,7 @@ function MapHome:init(playState, player)
 
     self.player.stateMachine:change('idle')
 
+    -- Sets the position of the player on entering the map
     if self.playState.restart or self.playState.firstEnter then
         self.playState.restart = false
         self.player.mapX = 15
@@ -69,6 +76,7 @@ function MapHome:update(dt)
             object:update(dt)
         end
 
+        -- Enters the next map
         if love.keyboard.isDown('right') and (self.player.mapX == self.tileWidth) then
             gStateStack:push(FadeInState({
                 r = 0, g = 0, b = 0
@@ -108,6 +116,7 @@ function MapHome:render()
 end
 
 function MapHome:createMap()
+    -- creates the tiles for each tilemap
     for y = 1, self.tileHeight do
         table.insert(self.walkableTiles, {})
 
@@ -129,19 +138,8 @@ function MapHome:createMap()
     end
 end
 
-function MapHome:updateCamera()
-    -- clamp movement of the camera's X between 0 and the map bounds - virtual width,
-    -- setting it half the screen to the left of the player so they are in the center
-    self.camX = math.max(0,
-        math.min(TILE_SIZE * self.tileWidth - VIRTUAL_WIDTH,
-        self.player.x - (VIRTUAL_WIDTH / 2 - 8)))
-
-    self.camY = math.max(0,
-        math.min(TILE_SIZE * self.tileHeight - VIRTUAL_HEIGHT,
-        self.player.y - (VIRTUAL_HEIGHT / 2 - 8)))
-end
-
 function MapHome:initMap()
+    -- creates the layout of the map
     table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, self.tileWidth, self.tileHeight, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
     table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 27, 18, self.tileWidth, 20, TILE_IDS['sand'][math.random(#TILE_IDS['sand'])]))
 end
@@ -161,6 +159,7 @@ function MapHome:generateObjects()
                 char.currentHP = char.HP
             end
 
+            -- pops the message
             gStateStack:pop()
             gStateStack:push(FadeInState({
                 r = 0, g = 0, b = 0
@@ -175,4 +174,16 @@ function MapHome:generateObjects()
             end))
         end))
     end
+end
+
+function MapHome:updateCamera()
+    -- clamp movement of the camera's X between 0 and the map bounds - virtual width,
+    -- setting it half the screen to the left of the player so they are in the center
+    self.camX = math.max(0,
+        math.min(TILE_SIZE * self.tileWidth - VIRTUAL_WIDTH,
+        self.player.x - (VIRTUAL_WIDTH / 2 - 8)))
+
+    self.camY = math.max(0,
+        math.min(TILE_SIZE * self.tileHeight - VIRTUAL_HEIGHT,
+        self.player.y - (VIRTUAL_HEIGHT / 2 - 8)))
 end
