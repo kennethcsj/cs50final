@@ -7,6 +7,10 @@
 MapTwo = Class{}
 
 function MapTwo:init(playState, player)
+    self.player = player
+    self.playState = playState
+    self.gameObjects = self.playState.gameObjects['MapTwo']
+
     self.camX = 0
     self.camY = 0
 
@@ -14,22 +18,14 @@ function MapTwo:init(playState, player)
     self.tileHeight = 30
 
     self.layers = {}
-
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, self.tileWidth, self.tileHeight, TILE_IDS['sand'][math.random(#TILE_IDS['sand'])]))
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, self.tileWidth, 10, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 20, 1, self.tileWidth, self.tileHeight, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
-    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, 15, self.tileHeight, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
-
     self.entities = {}
     self.objects = {}
     self.walkableTiles = {}
 
+    self:initMap()
     self:createMap()
     self:generateObjects()
     self:generateEntities()
-
-    self.player = player
-    self.playState = playState
 
     self.player.stateMachine = StateMachine {
         ['walk'] = function() return PlayerWalkState(self.player, self) end,
@@ -61,6 +57,12 @@ function MapTwo:update(dt)
         entity:update(dt)
     end
 
+    for k, object in pairs(self.objects) do
+        if object.interact then
+            object:changeAnimation('open')
+        end
+    end
+
     if love.keyboard.isDown('down') and (self.player.mapY == self.tileHeight) then
         gStateStack:push(FadeInState({
             r = 0, g = 0, b = 0
@@ -74,7 +76,7 @@ function MapTwo:update(dt)
         end))
     elseif love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
         for k, object in pairs(self.objects) do
-            if object.interactable and not object.interact then
+            if object.interactable and not object.interact and not object.interact then
                 if (self.player.direction == 'up') and (self.player.mapY == 11) and ((self.player.mapX == 17) or (self.player.mapX == 18)) then
                     object.onInteract()
                 end
@@ -174,24 +176,33 @@ function MapTwo:createMap()
     end
 end
 
+function MapTwo:initMap()
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, self.tileWidth, self.tileHeight, TILE_IDS['sand'][math.random(#TILE_IDS['sand'])]))
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, self.tileWidth, 10, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 20, 1, self.tileWidth, self.tileHeight, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
+    table.insert(self.layers, TileMap(self.tileWidth, self.tileHeight, 1, 1, 15, self.tileHeight, TILE_IDS['grass'][math.random(#TILE_IDS['grass'])]))
+end
+
 function MapTwo:generateObjects()
-    -- generate portal with function
-    table.insert(self.objects, Object(
-        MAP_DEFS['chest'],
-        17,
-        8
-    ))
+    for k, object in pairs(self.gameObjects) do
+        -- generate chest with function
+        table.insert(self.objects, Object(
+            MAP_DEFS[object.objectId],
+            object.x,
+            object.y
+        ))
+    end
 
     self.objects[#self.objects].onInteract = function()
         local items = {}
-        local count = 10
-        local object = 'sushi'
+        local count = 2
+        local object = 'cassia'
 
-        table.insert(items, Item(OBJECT_DEFS[object]))
+        table.insert(items, Item(ITEM_DEFS[object]))
         items[#items].count = count
 
         for k, item in pairs(self.player.items) do
-            if (item.name == 'Sushi') then
+            if (item.name == 'Cassia Syrup') then
                 item.count = item.count + items[#items].count
                 table.remove(items, #items)
                 break
@@ -203,6 +214,7 @@ function MapTwo:generateObjects()
         end
 
         gStateStack:push(MessagePopUpState('Obtained ' .. tostring(count) .. ' ' .. tostring(object) , self.camX, self.camY, 'center', function()
+            self.gameObjects['chest'].used = true
             self.objects[#self.objects].interact = true
             self.objects[#self.objects]:changeAnimation('open')
         end))

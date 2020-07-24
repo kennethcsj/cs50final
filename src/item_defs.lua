@@ -1,4 +1,4 @@
-OBJECT_DEFS = {
+ITEM_DEFS = {
     ['sushi'] = {
         name = 'Sushi',
         type = 'recovery',

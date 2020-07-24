@@ -19,6 +19,10 @@ function PlayState:init(def)
     self.firstEnter = true
     self.restart = false
 
+    self.oneTimeObjects = {}
+
+    self.gameObjects = OBJECT_DEFS
+
     self.level = MapIntro(self, self.player)
 end
 
@@ -39,4 +43,3 @@ end
 function PlayState:render()
     self.level:render()
 end
-

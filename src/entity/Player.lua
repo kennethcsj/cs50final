@@ -21,11 +21,11 @@ function Player:init(def)
     self.items = {}
 
     -- Starts with health recovery item
-    table.insert(self.items, Item(OBJECT_DEFS['sushi']))
+    table.insert(self.items, Item(ITEM_DEFS['sushi']))
     self.items[#self.items].count = 5
-    table.insert(self.items, Item(OBJECT_DEFS['chicken']))
+    table.insert(self.items, Item(ITEM_DEFS['chicken']))
     self.items[#self.items].count = 3
-    table.insert(self.items, Item(OBJECT_DEFS['cassia']))
+    table.insert(self.items, Item(ITEM_DEFS['cassia']))
     self.items[#self.items].count = 1
 end
 
