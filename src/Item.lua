@@ -1,3 +1,9 @@
+--[[
+    GD50
+
+    Item Class
+]]
+
 Item = Class{}
 
 function Item:init(def)
@@ -11,12 +17,14 @@ function Item:init(def)
     self.x = nil
     self.y = nil
 
+    -- number of items the entity has
     self.count = 1
 
     self.isUsed = false
     self.isSelected = false
 end
 
+-- can be extended
 function Item:use(char)
     if self.stat == 'hp' then
         char.currentHP = math.min(char.HP, char.currentHP + self.effect)

@@ -1,3 +1,9 @@
+--[[
+    GD50
+
+    Character Class
+]]
+
 Character = Class{}
 
 function Character:init(def, level)
@@ -29,7 +35,10 @@ function Character:init(def, level)
     
     self.currentHP = self.HP
 
+    -- display for healthbar above player
     self.healthBar = nil
+
+    -- display for healthbar and expBar in the battle menu
     self.displayHealthBar = nil
     self.expBar = nil
 
@@ -39,9 +48,13 @@ function Character:init(def, level)
 
     self.opacity = def.opacity or 255
 
-    -- used to determine the target number
+    -- used to determine the target
     self.target = nil
+
+    -- whether a target has been selected
     self.targetSelected = false
+
+    -- whether the character has attacked
     self.attacked = false
 
     self.isDead = false
@@ -78,6 +91,7 @@ end
 function Character:statsLevelUp()
     local stats = {'hp', 'attack', 'defense', 'speed'}
 
+    -- randomly increase a stat for the character
     while not (self.levelUpPoints == 0) do
         self:increaseStat(stats[math.random(#stats)], 1)
         self.levelUpPoints = self.levelUpPoints - 1
@@ -88,10 +102,12 @@ function Character:levelUp()
     self.level = self.level + 1
     self.expToLevel = self.level * self.level * 5 * 0.75
 
+    -- increase the number of level up points the character has
     self.levelUpPoints = self.levelUpPoints + LEVEL_UP_STATS_UPGRADE
 end
 
 function Character:increaseStat(stat, increaseAmount)
+    -- increases the character stat by the increased amount
     if stat == 'hp' then
         self.HP = self.HP + increaseAmount
         self.currentHP = self.currentHP + increaseAmount
