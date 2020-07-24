@@ -1,3 +1,9 @@
+--[[
+    GD50
+    
+    FieldMenuState Class
+]]
+
 FieldMenuState = Class{__includes = BaseState}
 
 function FieldMenuState:init(playState)

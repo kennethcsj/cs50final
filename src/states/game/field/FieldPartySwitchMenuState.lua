@@ -1,3 +1,9 @@
+--[[
+    GD50
+    
+    FieldPartySwitchMenuState Class
+]]
+
 FieldPartySwitchMenuState = Class{__includes = BaseState}
 
 function FieldPartySwitchMenuState:init(playState, charPosition)
@@ -29,10 +35,12 @@ function FieldPartySwitchMenuState:update(dt)
     if love.keyboard.wasPressed('backspace') then
         gStateStack:pop()
     elseif love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+        -- switch the party position
         local tempChar = self.party[self.select.currentSelection]
         self.party[self.select.currentSelection] = self.party[self.charPosition]
         self.party[self.charPosition] = tempChar
 
+        -- change the playstate animation to 1st player of the party
         self.playState.level.player.animations = self.playState.level.player:createAnimations(ENTITY_DEFS[self.party[1].id].animations)
         self.playState.level.player.character = self.party[1].id
 

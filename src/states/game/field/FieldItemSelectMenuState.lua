@@ -1,3 +1,9 @@
+--[[
+    GD50
+    
+    FieldItemSelectMenuState Class
+]]
+
 FieldItemSelectMenuState = Class{__includes = BaseState}
 
 function FieldItemSelectMenuState:init(playState, itemPosition)
@@ -34,12 +40,13 @@ function FieldItemSelectMenuState:update(dt)
         self.items[self.itemPosition]:use(self.party[self.select.currentSelection])
 
         local name = self.items[self.itemPosition].name
-        if self.items[self.itemPosition].count > 1 then
-            self.items[self.itemPosition].count = self.items[self.itemPosition].count - 1
-        else
+
+        -- remove item from player item list
+        if (self.items[self.itemPosition].count <= 0) then
             table.remove(self.items, self.itemPosition)
         end
 
+        -- push confirmation message
         local text = tostring(name) .. ' used on ' .. tostring(self.party[self.select.currentSelection].name) .. '!'
         gStateStack:push(MessageConfirmState(nil, self.playState.level.camX, self.playState.level.camY, 'center', function()
             gStateStack:pop()
@@ -61,6 +68,7 @@ function FieldItemSelectMenuState:render()
     love.graphics.setColor(0, 0, 0, 255)
     love.graphics.print('Choose character to use item on..  ' .. self.party[self.select.currentSelection].name, self.x + 16, self.y - 16)
     
+    -- change color of panel for current selection
     for k, panel in pairs(self.panels) do
         if k == self.select.currentSelection then
             panel.r, panel.g, panel.b = 255, 255, 255

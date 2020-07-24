@@ -1,8 +1,16 @@
+--[[
+    GD50
+    
+    FieldUpgradeStatsMenuState Class
+]]
+
 FieldUpgradeStatsMenuState = Class{__includes = BaseState}
 
 function FieldUpgradeStatsMenuState:init(playState, char)
     self.playState = playState
     self.char = char
+
+    -- keep tracks of the original value
     self.originalLvlPts = self.char.levelUpPoints
 
     -- how much to add 
@@ -35,6 +43,7 @@ function FieldUpgradeStatsMenuState:update(dt)
         gStateStack:push(MessageConfirmState(nil, self.playState.level.camX, self.playState.level.camY, 'center', function()
             gStateStack:pop()
             
+            -- increase the value for each stat
             for k, stat in pairs(self.stats) do
                 self.char:increaseStat(stat, self.items[k])
                 self.items[k] = 0
@@ -43,6 +52,7 @@ function FieldUpgradeStatsMenuState:update(dt)
             -- reset the number of Level Up Points
             self.originalLvlPts = self.char.levelUpPoints
 
+            -- display pop up
             local text = 'Increased ' .. tostring(self.char.name) .. "'s stats" 
             gStateStack:push(MessagePopUpState(text, self.playState.level.camX, self.playState.level.camY, 'center', function()
                 gStateStack:pop()

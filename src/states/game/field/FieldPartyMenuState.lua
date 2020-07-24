@@ -1,3 +1,9 @@
+--[[
+    GD50
+    
+    FieldPartyMenuState Class
+]]
+
 FieldPartyMenuState = Class{__includes = BaseState}
 
 function FieldPartyMenuState:init(playState)
@@ -14,6 +20,7 @@ function FieldPartyMenuState:init(playState)
 
     self.panels = {}
 
+    -- 4 panels for a max of 4 chars in a party
     for k = 1, 4 do
         table.insert(self.panels, Panel(self.x, self.y + (k - 1) * VIRTUAL_HEIGHT / 4, VIRTUAL_WIDTH / 2, VIRTUAL_HEIGHT / 4))
     end

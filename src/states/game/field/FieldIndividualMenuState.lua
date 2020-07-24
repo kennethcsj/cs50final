@@ -1,3 +1,9 @@
+--[[
+    GD50
+    
+    FieldIndividualMenuState Class
+]]
+
 FieldIndividualMenuState = Class{__includes = BaseState}
 
 function FieldIndividualMenuState:init(playState, char, charPosition)
@@ -5,8 +11,9 @@ function FieldIndividualMenuState:init(playState, char, charPosition)
     self.char = char
     self.charPosition = charPosition
 
-    self.party = self.playState.level.player.party.party
+    self.playerParty = self.playState.level.player.party.party
 
+    -- can upgrade player stats or change his/her position in the party
     self.items = {'Upgrade Stats', 'Change Party Position'}
 
     self.select = Selector{
@@ -24,7 +31,7 @@ function FieldIndividualMenuState:update(dt)
         gStateStack:pop()
     elseif love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then       
         if self.select.currentSelection == 1 then
-            gStateStack:push(FieldUpgradeStatsMenuState(self.playState, self.party[self.charPosition]))
+            gStateStack:push(FieldUpgradeStatsMenuState(self.playState, self.playerParty[self.charPosition]))
         elseif self.select.currentSelection == 2 then
             gStateStack:push(FieldPartySwitchMenuState(self.playState, self.charPosition))
         else

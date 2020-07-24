@@ -1,3 +1,9 @@
+--[[
+    GD50
+    
+    FieldItemMenuState Class
+]]
+
 FieldItemMenuState = Class{__includes = BaseState}
 
 function FieldItemMenuState:init(playState)
@@ -35,6 +41,7 @@ function FieldItemMenuState:update(dt)
 
     self.select:update(dt)
 
+    -- use to ensure current selection is displayed on screen
     if self.select.currentSelection > self.displayLastItem then
         self.displayFirstItem = self.displayFirstItem + self.select.currentSelection - self.displayLastItem
         self.displayLastItem = self.select.currentSelection
@@ -65,7 +72,6 @@ function FieldItemMenuState:render()
         item.isSelected = (k == self.select.currentSelection) and true or false
         
         if k >= self.displayFirstItem and k <= self.displayLastItem then
-            -- item.x = self.x + VIRTUAL_WIDTH / 4 - 8
             item.x = self.x + 8
             item.y = self.y + (k - self.displayFirstItem) * VIRTUAL_HEIGHT / 8 + VIRTUAL_HEIGHT / 16 - 8
             item:render()
