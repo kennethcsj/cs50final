@@ -1,9 +1,7 @@
 --[[
     GD50
-    Pokemon
-
-    Author: Colton Ogden
-    cogden@cs50.harvard.edu
+    
+    StartState Class
 ]]
 
 StartState = Class{__includes = BaseState}
@@ -20,6 +18,7 @@ function StartState:update(dt)
     end
     
     if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+        -- selects the character to be place as first player in party
         local character
         character = (self.choice == 5) and 'player-boy' or 'player-girl'
 

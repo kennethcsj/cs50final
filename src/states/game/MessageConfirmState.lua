@@ -1,3 +1,10 @@
+--[[
+    GD50
+    
+    MessageConfirmState Class
+    Pop up to confirm user selection
+]]
+
 MessageConfirmState = Class{__includes = BaseState}
 
 function MessageConfirmState:init(text, camX, camY, alignment, callback)

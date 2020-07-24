@@ -1,3 +1,9 @@
+--[[
+    GD50
+    
+    MessagePopUpState Class
+]]
+
 MessagePopUpState = Class{__includes = BaseState}
 
 function MessagePopUpState:init(text, camX, camY, alignment, callback)
