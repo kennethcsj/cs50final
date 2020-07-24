@@ -1,6 +1,5 @@
 --[[
     GD50
-    Pokemon
 
     Author: Colton Ogden
     cogden@cs50.harvard.edu
@@ -14,10 +13,13 @@ function TileMap:init(width, height, startX, startY, endX, endY, id)
     self.width = width
     self.height = height
 
+    -- the x and y coordinates the tilemap covers
     self.startX = startX
     self.startY = startY
     self.endX = endX
     self.endY = endY
+
+    -- the tile id used
     self.id = id
 end
 
