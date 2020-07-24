@@ -1,63 +1,72 @@
+--[[
+    GD50
+
+    BattleEnemySelectState Class
+    Determines who attacks first, victory, defeat
+]]
+
 BattleEnemySelectState = Class{__includes = BaseState}
 
 function BattleEnemySelectState:init(battleState, attackerNum)
     self.battleState = battleState
     self.attackerNum = attackerNum
 
+    self.playerParty = self.battleState.playerParty
     self.enemyParty = self.battleState.enemyParty
-    self.party = self.enemyParty
 
-    self.alive = {}
+    self.enemyAlive = {}
 
-    for k, char in pairs(self.party) do
+    -- obtain enemy char alive
+    for k, char in pairs(self.enemyParty) do
         if not char.isDead then
-            table.insert(self.alive, k)
+            table.insert(self.enemyAlive, k)
         end
     end
 
-    self.currentSelection = 1
+    -- a selector for enemy alive table. retrieve current selection
+    self.select = Selector{
+        items = self.enemyAlive
+    }
 end
 
 function BattleEnemySelectState:update(dt)
-    for k, char in pairs(self.battleState.player.party.party) do
+    for k, char in pairs(self.playerParty) do
         char:update(dt)
     end
 
-    for k, char in pairs(self.party) do
+    for k, char in pairs(self.enemyParty) do
         char:update(dt)
     end
 
-    if love.keyboard.wasPressed('up') then
-        if self.currentSelection == 1 then
-            self.currentSelection = #self.alive
-        else
-            self.currentSelection = self.currentSelection - 1
-        end
-    elseif love.keyboard.wasPressed('down') then
-        if self.currentSelection == #self.alive then
-            self.currentSelection = 1
-        else
-            self.currentSelection = self.currentSelection + 1
-        end
-    elseif love.keyboard.wasPressed('return') or love.keyboard.wasPressed('enter') then
-        self.battleState.player.party.party[self.attackerNum].targetSelected = true
-        self.battleState.player.party.party[self.attackerNum].target = self.party[self.alive[self.currentSelection]]
+    self.select:update(dt)
+
+    if love.keyboard.wasPressed('return') or love.keyboard.wasPressed('enter') then
+        -- sets player char target on enter
+        self.playerParty[self.attackerNum].targetSelected = true
+        self.playerParty[self.attackerNum].target = self.enemyParty[self.enemyAlive[self.select.currentSelection]]
         
-        if #self.battleState.player.party.party > self.attackerNum then
+        -- checks if there are more player char to attack
+        if #self.playerParty > self.attackerNum then
+            -- pops the current state and the current attacker menustate
             gStateStack:pop()
             gStateStack:pop()
+
+            -- push the next player's alive char battle menu 
             local playerAlive = false
-            for k = (self.attackerNum + 1), #self.battleState.player.party.party do
-                if not self.battleState.player.party.party[k].isDead then
+            for k = (self.attackerNum + 1), #self.playerParty do
+                if not self.playerParty[k].isDead then
                     playerAlive = true
                     gStateStack:push(BattleMenuState(self.battleState, k))
                     break
                 end
             end
+
+            -- if no more player alive, enter battle state
             if not playerAlive then
                 gStateStack:push(BattleAttackState(self.battleState))
             end
         else
+            -- no more player char to attack, pop current and menu state and push attack state
             gStateStack:pop()
             gStateStack:pop()
             gStateStack:push(BattleAttackState(self.battleState))
@@ -69,5 +78,5 @@ end
 
 function BattleEnemySelectState:render()
     love.graphics.setColor(255, 255, 255, 255)
-    love.graphics.draw(gTextures['cursor'], self.party[self.alive[self.currentSelection]].currentScreenX - 8, self.party[self.alive[self.currentSelection]].currentScreenY)
+    love.graphics.draw(gTextures['cursor'], self.enemyParty[self.enemyAlive[self.select.currentSelection]].currentScreenX - 8, self.enemyParty[self.enemyAlive[self.select.currentSelection]].currentScreenY)
 end

@@ -26,6 +26,9 @@ end
 
 -- can be extended
 function Item:use(char)
+    -- deduct one when used
+    self.count = self.count - 1
+    
     if self.stat == 'hp' then
         char.currentHP = math.min(char.HP, char.currentHP + self.effect)
     end

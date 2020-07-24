@@ -1,3 +1,10 @@
+--[[
+    GD50
+
+    BattleItemState Class
+    Selects Item and Char to use on
+]]
+
 BattleItemState = Class{__includes = BaseState}
 
 function BattleItemState:init(battleState)
@@ -15,7 +22,7 @@ function BattleItemState:init(battleState)
 
     self.bottomPanel = Panel(self.x, self.y + VIRTUAL_HEIGHT - 64, VIRTUAL_WIDTH * 3 / 4, 64)
 
-    -- use to create scrollable
+    -- use to create scrollable screen
     self.displayFirstItem = 1
     self.displayLastItem = 4
 end
@@ -24,11 +31,13 @@ function BattleItemState:update(dt)
     if love.keyboard.wasPressed('backspace') then
         gStateStack:pop()
     elseif love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+        -- push item select state
         gStateStack:push(BattleItemSelectState(self.battleState, self.select.currentSelection))
     end
 
     self.select:update(dt)
 
+    -- ensures the item selected remains on screen
     if self.select.currentSelection > self.displayLastItem then
         self.displayFirstItem = self.displayFirstItem + self.select.currentSelection - self.displayLastItem
         self.displayLastItem = self.select.currentSelection
@@ -37,7 +46,7 @@ function BattleItemState:update(dt)
         self.displayFirstItem = self.select.currentSelection
     end
 
-    for k, char in pairs(self.player.party.party) do
+    for k, char in pairs(self.battleState.playerParty) do
         char:update(dt)
     end
 

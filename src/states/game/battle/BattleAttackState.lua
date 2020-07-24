@@ -1,3 +1,10 @@
+--[[
+    GD50
+
+    BattleAttackState Class
+    Determines who attacks first, victory, defeat
+]]
+
 BattleAttackState = Class{__includes = BaseState}
 
 function BattleAttackState:init(battleState)
@@ -8,6 +15,7 @@ function BattleAttackState:init(battleState)
 
     self.total = #self.playerParty + #self.enemyParty
 
+    -- store all char sorted by their speed
     self.charSpeeds = {}
 
     -- sort the speed of the parties
@@ -15,6 +23,7 @@ function BattleAttackState:init(battleState)
 end
 
 function BattleAttackState:enter(params)
+    -- obtains char in player party who is alive
     local alivePlayerParty = {}
     for k, char in pairs(self.playerParty) do
         if not char.isDead then
@@ -22,6 +31,7 @@ function BattleAttackState:enter(params)
         end
     end
 
+    -- assigns a random player party char as target for enemy party character
     for k, char in pairs(self.enemyParty) do
         if not char.targetSelected then
             char.targetSelected = true
@@ -29,6 +39,7 @@ function BattleAttackState:enter(params)
         end
     end
 
+    -- use to check if all alive characters have attacked
     local attackerNum = 1
     for k, char in pairs(self.charSpeeds) do
         if not char.isDead then
@@ -40,6 +51,7 @@ function BattleAttackState:enter(params)
 end
 
 function BattleAttackState:checkDeaths()
+    -- checks number of enemy alive
     local numEnemyAlive = 0
     for k, char in pairs(self.enemyParty) do
         if char.currentHP <= 0 then
@@ -55,6 +67,7 @@ function BattleAttackState:checkDeaths()
         end
     end
 
+    -- checks number of player alive
     local numPlayerAlive = 0
     for k, char in pairs(self.playerParty) do
         if char.currentHP <= 0 then
@@ -65,6 +78,7 @@ function BattleAttackState:checkDeaths()
         end
     end
 
+    -- play victory or faint if entire player/enemy party is wipe
     if numEnemyAlive == 0 then
         self:victory()
         return true
@@ -77,9 +91,8 @@ function BattleAttackState:checkDeaths()
 end
 
 function BattleAttackState:victory()
+    -- sets the enemy in playstate to dead
     self.battleState.enemy.dead = true
-    
-    -- gStateStack:pop()
 
     Timer.after(0.5, function()
         -- when finished, push a victory message
@@ -169,6 +182,7 @@ function BattleAttackState:attack(attacker, defender, attackerNum)
             -- shrink the defender's health bar over half a second, doing at least 1 dmg
             local dmg = math.max(1, attacker.attack - defender.defense)
 
+            -- animation to show who is attacking and receiving the attack
             Timer.tween(0.1, {
                 [attacker] = {currentScreenY = attacker.currentScreenY - 4}
             })
@@ -185,6 +199,7 @@ function BattleAttackState:attack(attacker, defender, attackerNum)
                             [defender] = {currentScreenX = defender.currentScreenX - shiftX}
                         })
                         :finish(function()
+                            -- end of above animation, apply damage to defender
                             Timer.tween(0.5, {
                                 [defender.healthBar] = {value = defender.currentHP - dmg}
                             })
@@ -193,6 +208,7 @@ function BattleAttackState:attack(attacker, defender, attackerNum)
                                 gStateStack:pop()
 
                                 defender.currentHP = defender.currentHP - dmg
+                                -- adjust the healthbar shown on the battle menu
                                 if defender.type == 'hero' then
                                     defender.displayHealthBar.value = defender.currentHP
                                 end
@@ -202,10 +218,13 @@ function BattleAttackState:attack(attacker, defender, attackerNum)
                                     return
                                 end
                                 
+                                -- checks if everyone has attacked that turn
                                 attackerNum = attackerNum + 1
                                 if attackerNum > #self.charSpeeds then
                                     -- remove the last attack state from the stack
                                     gStateStack:pop()
+
+                                    -- checks the first alive player in the party to attack
                                     for k, char in pairs(self.playerParty) do
                                         if not char.isDead then
                                             gStateStack:push(BattleMenuState(self.battleState, k))
@@ -223,6 +242,7 @@ function BattleAttackState:attack(attacker, defender, attackerNum)
             end)
         end)
     else
+        -- checks if everyone has attacked that turn
         attackerNum = attackerNum + 1
         if attackerNum > #self.charSpeeds then
             -- remove the last attack state from the stack
@@ -251,6 +271,7 @@ function BattleAttackState:sortSpeed()
         table.insert(allParty, char)
     end
 
+    -- sorts according to the speed of the characters
     while #self.charSpeeds < self.total do
         local highest, entity, num = 0, nil
 

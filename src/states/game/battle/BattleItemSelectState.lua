@@ -1,3 +1,10 @@
+--[[
+    GD50
+
+    BattleItemSelectState Class
+    Selects Char to use on
+]]
+
 BattleItemSelectState = Class{__includes = BaseState}
 
 function BattleItemSelectState:init(battleState, itemNum)
@@ -5,20 +12,24 @@ function BattleItemSelectState:init(battleState, itemNum)
     self.itemNum = itemNum
 
     self.player = self.battleState.player
-    self.party = self.battleState.player.party.party
-    self.alive = {}
+    self.playerParty = self.battleState.playerParty
+    self.playerAlive = {}
 
-    for k, char in pairs(self.party) do
+    -- obtain the player's alive char
+    for k, char in pairs(self.playerParty) do
         if not char.isDead then
-            table.insert(self.alive, k)
+            table.insert(self.playerAlive, k)
         end
     end
 
-    self.currentSelection = 1
+    -- a selector for player alive table. retrieve current selection
+    self.select = Selector{
+        items = self.playerAlive
+    }
 end
 
 function BattleItemSelectState:update(dt)
-    for k, char in pairs(self.party) do
+    for k, char in pairs(self.playerParty) do
         char:update(dt)
     end
 
@@ -26,30 +37,23 @@ function BattleItemSelectState:update(dt)
         char:update(dt)
     end
 
-    if love.keyboard.wasPressed('up') then
-        if self.currentSelection == 1 then
-            self.currentSelection = #self.alive
-        else
-            self.currentSelection = self.currentSelection - 1
-        end
-    elseif love.keyboard.wasPressed('down') then
-        if self.currentSelection == #self.alive then
-            self.currentSelection = 1
-        else
-            self.currentSelection = self.currentSelection + 1
-        end
-    elseif self.party[self.currentSelection].currentHP < self.party[self.currentSelection].HP and (love.keyboard.wasPressed('return') or love.keyboard.wasPressed('enter')) then
-        self.player.items[self.itemNum]:use(self.party[self.currentSelection])
+    self.select:update(dt)
 
-        if self.player.items[self.itemNum].count > 1 then
-            self.player.items[self.itemNum].count = self.player.items[self.itemNum].count - 1
-        else
+    -- allows the usage of the item only when player hp is not at max
+    if self.playerParty[self.select.currentSelection].currentHP < self.playerParty[self.select.currentSelection].HP and (love.keyboard.wasPressed('return') or love.keyboard.wasPressed('enter')) then
+        -- use item function reduce the item count by one and execute it
+        self.player.items[self.itemNum]:use(self.playerParty[self.select.currentSelection])
+
+        -- remove item from list if count is 0
+        if (self.player.items[self.itemNum].count <= 0) then
             table.remove(self.player.items, self.itemNum)
         end
 
+        -- increase the healthbar of the player
         Timer.tween(0.5, {
-            [self.party[self.currentSelection].healthBar] = {value = self.party[self.currentSelection].currentHP}
+            [self.playerParty[self.select.currentSelection].healthBar] = {value = self.playerParty[self.select.currentSelection].currentHP}
         }):finish(function()
+            -- pops current and item state
             gStateStack:pop()
             gStateStack:pop()
         end)
@@ -60,5 +64,5 @@ end
 
 function BattleItemSelectState:render()
     love.graphics.setColor(255, 255, 255, 255)
-    love.graphics.draw(gTextures['cursor'], self.party[self.alive[self.currentSelection]].currentScreenX - 8, self.party[self.alive[self.currentSelection]].currentScreenY)
+    love.graphics.draw(gTextures['cursor'], self.playerParty[self.playerAlive[self.select.currentSelection]].currentScreenX - 8, self.playerParty[self.playerAlive[self.select.currentSelection]].currentScreenY)
 end

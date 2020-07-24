@@ -1,10 +1,9 @@
 --[[
     GD50
-    Pokemon
 
-    Author: Colton Ogden
-    cogden@cs50.harvard.edu
+    BattleMenuState Class
 ]]
+
 
 BattleMenuState = Class{__includes = BaseState}
 
@@ -12,6 +11,7 @@ function BattleMenuState:init(battleState, attackerNum)
     self.battleState = battleState
     self.attackerNum = attackerNum
     
+    -- creates a menu at the bottom right
     self.battleMenu = Menu {
         x = self.battleState.playState.camX + VIRTUAL_WIDTH * 3 / 4,
         y = self.battleState.playState.camY + VIRTUAL_HEIGHT - 64,
@@ -37,7 +37,7 @@ end
 function BattleMenuState:update(dt)
     self.battleMenu:update(dt)
 
-    for k, char in pairs(self.battleState.player.party.party) do
+    for k, char in pairs(self.battleState.playerParty) do
         char:update(dt)
     end
 
@@ -47,15 +47,17 @@ function BattleMenuState:update(dt)
 end
 
 function BattleMenuState:render()
-    love.graphics.draw(gTextures['red-arrow'], self.battleState.player.party.party[self.attackerNum].currentScreenX, self.battleState.player.party.party[self.attackerNum].currentScreenY - 24)
+    love.graphics.draw(gTextures['red-arrow'], self.battleState.playerParty[self.attackerNum].currentScreenX, self.battleState.playerParty[self.attackerNum].currentScreenY - 24)
     love.graphics.setFont(gFonts['small'])
-    love.graphics.print(self.battleState.player.party.party[self.attackerNum].name, self.battleState.playState.camX + 24, self.battleState.playState.camY + VIRTUAL_HEIGHT - 56)
+    love.graphics.print(self.battleState.playerParty[self.attackerNum].name, self.battleState.playState.camX + 24, self.battleState.playState.camY + VIRTUAL_HEIGHT - 56)
     
-    local healthBar = self.battleState.player.party.party[self.attackerNum].displayHealthBar
+    -- display healthbar of current attacker
+    local healthBar = self.battleState.playerParty[self.attackerNum].displayHealthBar
     healthBar:render()
     love.graphics.print(tostring(healthBar.value) .. ' HP / ' .. tostring(healthBar.max) .. ' HP', healthBar.x + healthBar.width/2 - 32, healthBar.y + 6)
     
-    local expBar = self.battleState.player.party.party[self.attackerNum].expBar
+    -- display exp bar of current attacker
+    local expBar = self.battleState.playerParty[self.attackerNum].expBar
     expBar:render()
     love.graphics.print(tostring(expBar.value) .. ' EXP / ' .. tostring(expBar.max) .. ' EXP', expBar.x + expBar.width/2 - 32, expBar.y + 6)
     
