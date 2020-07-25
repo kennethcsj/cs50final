@@ -10,7 +10,11 @@ OBJECT_DEFS = {
             objectId = 'chest',
             x = 17,
             y = 8,
-            used = false
+            used = false,
+            itemId = 'cassia',
+            itemName = 'Cassia Syrup',
+            count = 2,
+
         },
     },
     ['MapThree'] = {

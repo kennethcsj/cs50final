@@ -191,33 +191,36 @@ function MapTwo:generateObjects()
             object.x,
             object.y
         ))
-    end
 
-    self.objects[#self.objects].onInteract = function()
-        local items = {}
-        local count = 2
-        local object = 'cassia'
+        self.objects[#self.objects].interact = object.used
 
-        table.insert(items, Item(ITEM_DEFS[object]))
-        items[#items].count = count
-
-        for k, item in pairs(self.player.items) do
-            if (item.name == 'Cassia Syrup') then
-                item.count = item.count + items[#items].count
-                table.remove(items, #items)
-                break
+        self.objects[#self.objects].onInteract = function()
+            local items = {}
+            local count = 2
+            local itemId = 'cassia'
+            local itemName = 'Cassia Syrup'
+    
+            table.insert(items, Item(ITEM_DEFS[object]))
+            items[#items].count = count
+    
+            for k, item in pairs(self.player.items) do
+                if (item.name == itemName) then
+                    item.count = item.count + items[#items].count
+                    table.remove(items, #items)
+                    break
+                end
             end
+    
+            if (#items > 0) then
+                table.insert(self.player.items, items[#items])
+            end
+    
+            gStateStack:push(MessagePopUpState('Obtained ' .. tostring(count) .. ' ' .. tostring(itemName) , self.camX, self.camY, 'center', function()
+                self.gameObjects['chest'].used = true
+                self.objects[#self.objects].interact = true
+                self.objects[#self.objects]:changeAnimation('open')
+            end))
         end
-
-        if (#items > 0) then
-            table.insert(self.player.items, items[#items])
-        end
-
-        gStateStack:push(MessagePopUpState('Obtained ' .. tostring(count) .. ' ' .. tostring(object) , self.camX, self.camY, 'center', function()
-            self.gameObjects['chest'].used = true
-            self.objects[#self.objects].interact = true
-            self.objects[#self.objects]:changeAnimation('open')
-        end))
     end
 end
 
