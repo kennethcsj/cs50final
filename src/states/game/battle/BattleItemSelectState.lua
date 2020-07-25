@@ -84,6 +84,8 @@ function BattleItemSelectState:update(dt)
                     Timer.tween(0.5, {
                         [self.effectiveParty[self.select.currentSelection].healthBar] = {value = self.effectiveParty[self.select.currentSelection].currentHP}
                     }):finish(function()
+                        self.effectiveParty[self.select.currentSelection].displayHealthBar.value = self.effectiveParty[self.select.currentSelection].currentHP
+
                         -- pops current and item state
                         gStateStack:pop()
                         gStateStack:pop()

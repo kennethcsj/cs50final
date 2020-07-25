@@ -141,6 +141,7 @@ function BattleAttackState:faint()
             for k, char in pairs(self.playerParty) do
                 char.isDead = false
                 char.currentHP = char.HP
+                char.r, char.g, char.b = 255, 255, 255
             end
 
             -- pop off the battle attack state and back into the battle state
@@ -217,7 +218,7 @@ function BattleAttackState:attack(attacker, defender, attackerNum)
                         :finish(function()
                             -- end of above animation, apply damage to defender
                             Timer.tween(0.5, {
-                                [defender.healthBar] = {value = defender.currentHP - dmg}
+                                [defender.healthBar] = {value = math.min(0, defender.currentHP - dmg)}
                             })
                             :finish(function()
                                 -- pops away attack message

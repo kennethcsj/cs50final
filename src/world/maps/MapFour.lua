@@ -110,6 +110,7 @@ function MapFour:update(dt)
                     }, 1, 
                     function()
                         gSounds['field-music']:pause()
+                        gSounds['battle-music']:setLooping(true)
                         gSounds['battle-music']:setVolume(0.3)
                         gSounds['battle-music']:play()
 
