@@ -33,8 +33,14 @@ end
 
 function FieldPartySwitchMenuState:update(dt)
     if love.keyboard.wasPressed('backspace') then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+
         gStateStack:pop()
     elseif love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+        
         -- switch the party position
         local tempChar = self.party[self.select.currentSelection]
         self.party[self.select.currentSelection] = self.party[self.charPosition]

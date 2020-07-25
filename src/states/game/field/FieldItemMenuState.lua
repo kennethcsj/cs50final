@@ -34,8 +34,14 @@ end
 
 function FieldItemMenuState:update(dt)
     if love.keyboard.wasPressed('backspace') then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+        
         gStateStack:pop()
     elseif love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+
         gStateStack:push(FieldItemSelectMenuState(self.playState, self.select.currentSelection))
     end
 

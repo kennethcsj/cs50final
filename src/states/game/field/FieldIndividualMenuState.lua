@@ -28,8 +28,14 @@ end
 
 function FieldIndividualMenuState:update(dt)
     if love.keyboard.wasPressed('backspace') then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+
         gStateStack:pop()
-    elseif love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then       
+    elseif love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+        
         if self.select.currentSelection == 1 then
             gStateStack:push(FieldUpgradeStatsMenuState(self.playState, self.playerParty[self.charPosition]))
         elseif self.select.currentSelection == 2 then

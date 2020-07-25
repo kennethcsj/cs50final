@@ -95,6 +95,9 @@ function BattleAttackState:checkDeaths()
 end
 
 function BattleAttackState:victory()
+    gSounds['victory']:stop()
+    gSounds['victory']:play()
+
     -- sets the enemy in playstate to dead
     self.battleState.enemy.dead = true
 
@@ -126,6 +129,9 @@ function BattleAttackState:victory()
 end
 
 function BattleAttackState:faint()
+    gSounds['gameover']:stop()
+    gSounds['gameover']:play()
+
     Timer.after(0.5, function()
         -- when finished, push a everyone dead message
         gStateStack:push(BattleMessageState('Your party has been killed!', function()
@@ -191,6 +197,9 @@ function BattleAttackState:attack(attacker, defender, attackerNum)
                 [attacker] = {currentScreenY = attacker.currentScreenY - 4}
             })
             :finish(function()
+                gSounds['attack']:stop()
+                gSounds['attack']:play()
+
                 Timer.tween(0.1, {
                     [attacker] = {currentScreenY = attacker.currentScreenY + 4}
                 })
@@ -199,6 +208,9 @@ function BattleAttackState:attack(attacker, defender, attackerNum)
                         [defender] = {currentScreenX = defender.currentScreenX + shiftX}
                     })
                     :finish(function()
+                        gSounds['damage']:stop()
+                        gSounds['damage']:play()
+
                         Timer.tween(0.1, {
                             [defender] = {currentScreenX = defender.currentScreenX - shiftX}
                         })
@@ -301,6 +313,8 @@ function BattleAttackState:pushExpMessage(playerAlive, idxAlive, expPerChar)
 
         -- level up if we've gone over the needed amount
         if char.currentExp > char.expToLevel then
+            gSounds['levelup']:stop()
+            gSounds['levelup']:play()
 
             -- set our exp to whatever the overlap is
             char.currentExp = char.currentExp - char.expToLevel

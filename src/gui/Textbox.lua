@@ -64,6 +64,9 @@ end
 function Textbox:update(dt)
     if self.input then
         if love.keyboard.wasPressed('space') or love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+            gSounds['select']:stop()
+            gSounds['select']:play()
+            
             self:next()
         end
     end

@@ -61,6 +61,9 @@ function BattleItemSelectState:update(dt)
 
     -- allows the usage of the item only when player hp is not at max
     if (love.keyboard.wasPressed('return') or love.keyboard.wasPressed('enter')) then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+
         if #self.effectiveParty > 0 then
             -- use item function reduce the item count by one and execute it
             if (self.player.items[self.itemNum]:use(self.effectiveParty[self.select.currentSelection])) then
@@ -93,6 +96,9 @@ function BattleItemSelectState:update(dt)
             end
         end
     elseif love.keyboard.wasPressed('backspace') then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+        
         gStateStack:pop()
     end
 end

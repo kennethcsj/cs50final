@@ -41,6 +41,9 @@ function BattleEnemySelectState:update(dt)
     self.select:update(dt)
 
     if love.keyboard.wasPressed('return') or love.keyboard.wasPressed('enter') then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+
         -- sets player char target on enter
         self.playerParty[self.attackerNum].targetSelected = true
         self.playerParty[self.attackerNum].target = self.enemyParty[self.enemyAlive[self.select.currentSelection]]
@@ -72,6 +75,9 @@ function BattleEnemySelectState:update(dt)
             gStateStack:push(BattleAttackState(self.battleState))
         end
     elseif love.keyboard.wasPressed('backspace') then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+        
         gStateStack:pop()
     end
 end

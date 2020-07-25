@@ -37,9 +37,15 @@ end
 
 function FieldUpgradeStatsMenuState:update(dt)
     if love.keyboard.wasPressed('backspace') then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+
         self.char.levelUpPoints = self.originalLvlPts
         gStateStack:pop()
     elseif (self.originalLvlPts > 0 and not (self.originalLvlPts == self.char.levelUpPoints)) and (love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return')) then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+
         gStateStack:push(MessageConfirmState(nil, self.playState.level.camX, self.playState.level.camY, 'center', function()
             gStateStack:pop()
             
@@ -59,11 +65,17 @@ function FieldUpgradeStatsMenuState:update(dt)
             end))
         end))   
     elseif love.keyboard.wasPressed('left') then
+        gSounds['beep']:stop()
+        gSounds['beep']:play()
+
         if not (self.items[self.select.currentSelection] == 0) then
             self.items[self.select.currentSelection] = self.items[self.select.currentSelection] - 1
             self.char.levelUpPoints = self.char.levelUpPoints + 1
         end
     elseif love.keyboard.wasPressed('right') then
+        gSounds['beep']:stop()
+        gSounds['beep']:play()
+
         if not (self.char.levelUpPoints <= 0) then
             self.items[self.select.currentSelection] = self.items[self.select.currentSelection] + 1
             self.char.levelUpPoints = self.char.levelUpPoints - 1

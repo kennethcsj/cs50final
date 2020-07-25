@@ -96,16 +96,23 @@ function MapFour:update(dt)
             function() end))
         end))
     elseif (love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return')) and (self.player.mapY == 11) then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+
         -- first, push a fade in; when that's done, push a battle state and a fade
         -- out, which will fall back to the battle state once it pushes itself off
         gStateStack:push(DialogueState("" .. 
-            "Bat Boss: Yuo won't be able to defeat me!" ..
+            "Bat Boss: You won't be able to defeat me!" ..
             "", self.camX, self.camY, 'center', function()
                 gStateStack:push(
                     FadeInState({
                         r = 255, g = 255, b = 255,
                     }, 1, 
                     function()
+                        gSounds['field-music']:pause()
+                        gSounds['battle-music']:setVolume(0.3)
+                        gSounds['battle-music']:play()
+
                         gStateStack:push(BattleState(self, self.player, self.entities[#self.entities], 1))
                         gStateStack:push(FadeOutState({
                             r = 255, g = 255, b = 255,

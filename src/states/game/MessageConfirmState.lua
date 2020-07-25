@@ -26,8 +26,11 @@ function MessageConfirmState:update(dt)
     self.textbox:update(dt)
 
     if love.keyboard.wasPressed('backspace') then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+
         gStateStack:pop()
-    elseif love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+    elseif love.keyboard.wasPressed('space') or love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
         if self.items[self.select.currentSelection] == 'Yes' then
             self.callback()
         elseif self.items[self.select.currentSelection] == 'No' then

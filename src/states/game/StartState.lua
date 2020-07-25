@@ -7,6 +7,9 @@
 StartState = Class{__includes = BaseState}
 
 function StartState:init()
+    gSounds['intro-music']:setVolume(0.3)
+    gSounds['intro-music']:play()
+
     self.choice = 5
     self.choiceX = VIRTUAL_WIDTH / 2 - 8
     self.choiceY = VIRTUAL_HEIGHT / 2 + 16
@@ -14,10 +17,16 @@ end
 
 function StartState:update(dt)
     if love.keyboard.wasPressed('left') or love.keyboard.wasPressed('right') then
+        gSounds['beep']:stop()
+        gSounds['beep']:play()
+
         self.choice = (self.choice == 5) and 8 or 5
     end
     
     if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+        
         -- selects the character to be place as first player in party
         local character
         character = (self.choice == 5) and 'player-boy' or 'player-girl'
@@ -26,6 +35,7 @@ function StartState:update(dt)
             r = 255, g = 255, b = 255
         }, 1,
         function()
+            gSounds['intro-music']:stop()
             gStateStack:pop()
             
             gStateStack:push(PlayState({character = character}))

@@ -101,3 +101,20 @@ gFrames = {
     ['chest'] = GenerateQuads(gTextures['chest'], 32, 48),
     ['foods'] = GenerateQuads(gTextures['foods'], 16, 16)
 }
+
+gSounds = {
+    ['beep'] = love.audio.newSource('sounds/beep.wav'),
+    ['menu'] = love.audio.newSource('sounds/menu.wav'),
+    ['select'] = love.audio.newSource('sounds/select.wav'),
+    ['levelup'] = love.audio.newSource('sounds/levelup.wav'),
+    ['obtain'] = love.audio.newSource('sounds/obtain.wav'),
+    ['attack'] = love.audio.newSource('sounds/attack.wav'),
+    ['damage'] = love.audio.newSource('sounds/damage.wav'),
+    ['victory'] = love.audio.newSource('sounds/victory.wav'),
+    ['gameover'] = love.audio.newSource('sounds/gameover.wav'),
+    ['item'] = love.audio.newSource('sounds/item.mp3'),
+    ['battle-music'] = love.audio.newSource('sounds/battle.mp3'),
+    ['field-music'] = love.audio.newSource('sounds/field-music.mp3'),
+    ['intro-music'] = love.audio.newSource('sounds/intro-music.mp3'),
+    ['town-music'] = love.audio.newSource('sounds/town-music.mp3'),
+}

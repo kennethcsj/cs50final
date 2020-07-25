@@ -110,8 +110,8 @@ function BattleState:enter(params)
 end
 
 function BattleState:exit()
-    -- gSounds['battle-music']:stop()
-    -- gSounds['field-music']:play()
+    gSounds['battle-music']:stop()
+    gSounds['field-music']:play()
 end
 
 function BattleState:update(dt)

@@ -95,6 +95,10 @@ function EntityWalkState:attemptMove()
             
             -- allow battle when collide with entity
             if (self.entity.type == 'player') then
+                gSounds['field-music']:pause()
+                gSounds['battle-music']:setVolume(0.3)
+                gSounds['battle-music']:play()
+
                 entity.collide = true
             end
             return

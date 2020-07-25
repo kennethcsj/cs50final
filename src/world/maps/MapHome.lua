@@ -7,6 +7,11 @@
 MapHome = Class{}
 
 function MapHome:init(playState, player)
+    gSounds['field-music']:stop()
+    gSounds['town-music']:setVolume(0.3)
+    gSounds['town-music']:setLooping(true)
+    gSounds['town-music']:play()
+
     self.player = player
     self.playState = playState
     
@@ -81,7 +86,12 @@ function MapHome:update(dt)
             gStateStack:push(FadeInState({
                 r = 0, g = 0, b = 0
             }, 1,
-            function()            
+            function()
+                gSounds['town-music']:stop()
+                gSounds['field-music']:setVolume(0.3)
+                gSounds['field-music']:setLooping(true)
+                gSounds['field-music']:play()
+
                 self.playState.level = MapOne(self.playState, self.player)
                 gStateStack:push(FadeOutState({
                     r = 0, g = 0, b = 0

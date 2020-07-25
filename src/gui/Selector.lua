@@ -15,12 +15,18 @@ end
 
 function Selector:update(dt)
     if love.keyboard.wasPressed('up') then
+        gSounds['beep']:stop()
+        gSounds['beep']:play()
+
         if self.currentSelection == 1 then
             self.currentSelection = #self.items
         else
             self.currentSelection = self.currentSelection - 1
         end
     elseif love.keyboard.wasPressed('down') then
+        gSounds['beep']:stop()
+        gSounds['beep']:play()
+
         if self.currentSelection == #self.items then
             self.currentSelection = 1
         else

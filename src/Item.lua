@@ -45,6 +45,9 @@ function Item:use(char)
         end
     end
 
+    gSounds['item']:stop()
+    gSounds['item']:play()
+
     -- deduct one when used
     self.count = self.count - 1
 

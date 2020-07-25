@@ -29,8 +29,14 @@ end
 
 function BattleItemState:update(dt)
     if love.keyboard.wasPressed('backspace') then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+
         gStateStack:pop()
     elseif love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+        
         -- push item select state
         gStateStack:push(BattleItemSelectState(self.battleState, self.select.currentSelection))
     end

@@ -34,8 +34,14 @@ end
 
 function FieldItemSelectMenuState:update(dt)
     if love.keyboard.wasPressed('backspace') then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+
         gStateStack:pop()
     elseif love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+        gSounds['select']:stop()
+        gSounds['select']:play()
+        
         gStateStack:push(MessageConfirmState(nil, self.playState.level.camX, self.playState.level.camY, 'center', function()
             -- Use Item
             if (self.items[self.itemPosition]:use(self.party[self.select.currentSelection])) then

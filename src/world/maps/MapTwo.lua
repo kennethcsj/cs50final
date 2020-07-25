@@ -78,6 +78,9 @@ function MapTwo:update(dt)
         for k, object in pairs(self.objects) do
             if object.interactable and not object.interact and not object.interact then
                 if (self.player.direction == 'up') and (self.player.mapY == 11) and ((self.player.mapX == 17) or (self.player.mapX == 18)) then
+                    gSounds['obtain']:stop()
+                    gSounds['obtain']:play()
+
                     object.onInteract()
                 end
             end
@@ -200,7 +203,7 @@ function MapTwo:generateObjects()
             local itemId = 'cassia'
             local itemName = 'Cassia Syrup'
     
-            table.insert(items, Item(ITEM_DEFS[object]))
+            table.insert(items, Item(ITEM_DEFS[itemId]))
             items[#items].count = count
     
             for k, item in pairs(self.player.items) do

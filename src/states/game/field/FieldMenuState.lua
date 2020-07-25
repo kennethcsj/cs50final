@@ -42,6 +42,9 @@ end
 
 function FieldMenuState:update(dt)
     if love.keyboard.wasPressed('m') or love.keyboard.wasPressed('backspace') then
+        gSounds['menu']:stop()
+        gSounds['menu']:play()
+        
         gStateStack:pop()
     end
 
