@@ -34,6 +34,7 @@ function MapIntro:update(dt)
                 r = 0, g = 0, b = 0
             }, 1,
             function()
+                gSounds['dream-music']:setVolume(0.3)
                 gSounds['dream-music']:stop()
 
                 self.playState.level = MapHome(self.playState, self.player)
