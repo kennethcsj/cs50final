@@ -47,33 +47,26 @@ function BattleEnemySelectState:update(dt)
         -- sets player char target on enter
         self.playerParty[self.attackerNum].targetSelected = true
         self.playerParty[self.attackerNum].target = self.enemyParty[self.enemyAlive[self.select.currentSelection]]
+
+        -- pops the current state and the current attacker menustate
+        gStateStack:pop()
+        gStateStack:pop()
+
+        -- push battle menu if an alive player have not select enemy
+        local playerAlive = false
+        for k = 1, #self.playerParty do
+            if not self.playerParty[k].isDead and not self.playerParty[k].targetSelected then
+                playerAlive = true
+                gStateStack:push(BattleMenuState(self.battleState, k))
+                break
+            end
+        end
         
-        -- checks if there are more player char to attack
-        if #self.playerParty > self.attackerNum then
-            -- pops the current state and the current attacker menustate
-            gStateStack:pop()
-            gStateStack:pop()
-
-            -- push the next player's alive char battle menu 
-            local playerAlive = false
-            for k = (self.attackerNum + 1), #self.playerParty do
-                if not self.playerParty[k].isDead then
-                    playerAlive = true
-                    gStateStack:push(BattleMenuState(self.battleState, k))
-                    break
-                end
-            end
-
-            -- if no more player alive, enter battle state
-            if not playerAlive then
-                gStateStack:push(BattleAttackState(self.battleState))
-            end
-        else
-            -- no more player char to attack, pop current and menu state and push attack state
-            gStateStack:pop()
-            gStateStack:pop()
+        -- enter battle state if all players have attacked
+        if not playerAlive then
             gStateStack:push(BattleAttackState(self.battleState))
         end
+        
     elseif love.keyboard.wasPressed('backspace') then
         gSounds['select']:stop()
         gSounds['select']:play()

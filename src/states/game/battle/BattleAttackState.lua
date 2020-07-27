@@ -152,6 +152,7 @@ function BattleAttackState:faint()
 end
 
 function BattleAttackState:attack(attacker, defender, attackerNum)
+    -- once character attack, target is not selected
     attacker.targetSelected = false
 
     local shiftX
@@ -218,13 +219,13 @@ function BattleAttackState:attack(attacker, defender, attackerNum)
                         :finish(function()
                             -- end of above animation, apply damage to defender
                             Timer.tween(0.5, {
-                                [defender.healthBar] = {value = math.min(0, defender.currentHP - dmg)}
+                                [defender.healthBar] = {value = math.max(0, defender.currentHP - dmg)}
                             })
                             :finish(function()
                                 -- pops away attack message
                                 gStateStack:pop()
 
-                                defender.currentHP = defender.currentHP - dmg
+                                defender.currentHP = math.max(0, defender.currentHP - dmg)
                                 -- adjust the healthbar shown on the battle menu
                                 if defender.type == 'hero' then
                                     defender.displayHealthBar.value = defender.currentHP
