@@ -82,7 +82,7 @@ function MapHome:update(dt)
         end
 
         -- Enters the next map
-        if love.keyboard.isDown('right') and (self.player.mapX == self.tileWidth) then
+        if love.keyboard.isDown('right') and (self.player.mapX == self.tileWidth) and (self.player.mapY == 18 or self.player.mapY == 19 or self.player.mapY == 20) then
             gStateStack:push(FadeInState({
                 r = 0, g = 0, b = 0
             }, 1,
