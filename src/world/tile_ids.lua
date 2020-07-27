@@ -12,7 +12,7 @@ TILE_IDS = {
     ['tall-grass'] = 42,
     ['half-tall-grass'] = 50,
     ['sand'] = {45, 62},
-    ['flower'] = 41,
+    ['flower'] = {8, 16, 24, 32, 40, 48, 56, 64},
 }
 
 -- Tiles which entity can walk on

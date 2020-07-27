@@ -142,6 +142,10 @@ function MapHome:createMap()
             for x = 1, self.tileWidth do
                 local id = ((y >= layer.startY) and (y <= layer.endY) and (x >= layer.startX) and (x <= layer.endX)) and layer.id or TILE_IDS['empty']
 
+                if (id == 46 or id == 47) then
+                    id = (math.random(20) == 1) and TILE_IDS['flower'][math.random(#TILE_IDS['flower'])] or id
+                end
+
                 table.insert(layer.tiles[y], Tile(x, y, id))
             end
         end
