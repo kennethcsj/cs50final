@@ -193,7 +193,7 @@ function MapOne:generateEntities()
     local type = 'bat'
 
     -- creates 3 bats with the following coordinates
-    local mapPositionX, mapPositionY = {19, 10, 25}, {15, 18, 17}
+    local mapPositionX, mapPositionY = {19, 10, 25, 18}, {15, 18, 17, 7}
 
     for k, value in pairs(mapPositionX) do
         table.insert(self.entities, Enemy {

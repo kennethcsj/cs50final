@@ -231,7 +231,7 @@ function MapTwo:generateEntities()
     local type = 'bat'
 
     -- creates enemy entities with the following positions
-    local mapPositionX, mapPositionY = {19, 10, 25}, {15, 18, 17}
+    local mapPositionX, mapPositionY = {19, 18}, {15, 20}
 
     for k, value in pairs(mapPositionX) do
         table.insert(self.entities, Enemy {

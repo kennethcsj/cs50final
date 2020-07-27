@@ -117,4 +117,5 @@ gSounds = {
     ['field-music'] = love.audio.newSource('sounds/field-music.mp3'),
     ['intro-music'] = love.audio.newSource('sounds/intro-music.mp3'),
     ['town-music'] = love.audio.newSource('sounds/town-music.mp3'),
+    ['dream-music'] = love.audio.newSource('sounds/dream-music.mp3'),
 }

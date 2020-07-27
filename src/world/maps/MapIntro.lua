@@ -7,6 +7,9 @@
 MapIntro = Class{}
 
 function MapIntro:init(playState, player)
+    gSounds['dream-music']:setLooping(true)
+    gSounds['dream-music']:play()
+
     self.player = player
     self.playState = playState
 
@@ -30,7 +33,9 @@ function MapIntro:update(dt)
             gStateStack:push(FadeInState({
                 r = 0, g = 0, b = 0
             }, 1,
-            function()            
+            function()
+                gSounds['dream-music']:stop()
+
                 self.playState.level = MapHome(self.playState, self.player)
                 gStateStack:push(FadeOutState({
                     r = 0, g = 0, b = 0

@@ -138,7 +138,7 @@ function EntityWalkState:processAI(params, dt)
     if self.moveDuration == 0 then
         
         -- set an initial move duration and direction
-        self.moveDuration = math.random(2)
+        self.moveDuration = math.random(1)
         self.entity.direction = directions[math.random(#directions)]
     elseif self.movementTimer > self.moveDuration then
         self.movementTimer = 0
@@ -147,7 +147,7 @@ function EntityWalkState:processAI(params, dt)
         if math.random(2) == 1 then
             self.entity:changeState('idle')
         else
-            self.moveDuration = math.random(2)
+            self.moveDuration = math.random(1)
             self.entity.direction = directions[math.random(#directions)]
         end
     end
